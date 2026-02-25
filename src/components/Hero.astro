@@ -2,32 +2,32 @@
 import { profile } from "../data/site";
 ---
 
-<section class="flex min-h-[80vh] items-center pt-24">
-  <div class="mx-auto w-full max-w-4xl px-6">
-    <p class="mb-4 text-sm font-medium text-accent">{profile.status}</p>
+<section class="flex min-h-[75vh] items-center pt-24">
+  <div class="mx-auto w-full max-w-3xl px-6">
+    <p class="mb-5 text-sm font-medium text-accent">{profile.status}</p>
 
-    <h1 class="mb-4 text-4xl font-bold tracking-tight text-text-primary md:text-5xl lg:text-6xl">
+    <h1 class="mb-5 text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
       {profile.name}
     </h1>
 
-    <p class="mb-6 max-w-2xl text-lg leading-relaxed text-text-secondary md:text-xl">
+    <p class="mb-4 max-w-xl text-lg leading-relaxed text-text-secondary">
       {profile.catchphrase}
     </p>
 
-    <p class="mb-10 max-w-xl text-base leading-relaxed text-text-muted">
+    <p class="mb-10 max-w-lg text-sm leading-relaxed text-text-muted">
       {profile.orientation}
     </p>
 
-    <div class="flex gap-4">
+    <div class="flex gap-3">
       <a
         href="#projects"
-        class="inline-flex items-center rounded-md bg-text-primary px-5 py-2.5 text-sm font-medium text-bg-primary transition-opacity hover:opacity-80"
+        class="inline-flex items-center rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
       >
         Projects
       </a>
       <a
         href="#skills"
-        class="inline-flex items-center rounded-md border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-text-muted hover:text-text-primary"
+        class="inline-flex items-center rounded-md border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-card"
       >
         Skills
       </a>

@@ -9,7 +9,7 @@ const navItems = [
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 border-b border-border-subtle bg-bg-primary/90 backdrop-blur-md">
-  <nav class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+  <nav class="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
     <a href="/" class="text-sm font-semibold text-text-primary tracking-tight transition-colors hover:text-accent">
       {profile.name}
     </a>
@@ -18,10 +18,7 @@ const navItems = [
       {
         navItems.map((item) => (
           <li>
-            <a
-              href={item.href}
-              class="text-sm text-text-muted transition-colors hover:text-text-primary"
-            >
+            <a href={item.href} class="text-sm text-text-muted transition-colors hover:text-text-primary">
               {item.label}
             </a>
           </li>
@@ -40,7 +37,7 @@ const navItems = [
     </button>
   </nav>
 
-  <div id="mobile-menu" class="hidden border-t border-border-subtle bg-bg-primary/95 backdrop-blur-md md:hidden">
+  <div id="mobile-menu" class="hidden border-t border-border-subtle bg-bg-primary md:hidden">
     <ul class="flex flex-col px-6 py-3">
       {
         navItems.map((item) => (

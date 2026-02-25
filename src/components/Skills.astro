@@ -4,15 +4,15 @@ import SkillBadge from "./ui/SkillBadge.astro";
 import { skills } from "../data/site";
 ---
 
-<section id="skills" class="scroll-mt-24 py-16">
-  <div class="mx-auto max-w-4xl px-6">
+<section id="skills" class="scroll-mt-24 py-14">
+  <div class="mx-auto max-w-3xl px-6">
     <SectionHeading title="Skills" />
 
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
         skills.map((category) => (
           <div class="rounded-lg border border-border-default bg-bg-secondary p-5">
-            <h3 class="mb-3 text-sm font-medium text-text-primary">
+            <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-accent">
               {category.category}
             </h3>
             <div class="flex flex-wrap gap-1.5">
