@@ -1,0 +1,13 @@
+---
+export interface Props {
+  id?: string;
+  title: string;
+}
+const { id, title } = Astro.props;
+---
+
+<h2 id={id} class="mb-10 flex items-center gap-3 text-3xl font-bold text-text-primary">
+  <span class="font-mono text-cyber-cyan">~/</span>
+  <span>{title}</span>
+  <span class="hidden flex-1 border-t border-border-default/50 md:block" aria-hidden="true"></span>
+</h2>

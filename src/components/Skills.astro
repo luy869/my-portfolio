@@ -1,0 +1,31 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import SkillBadge from "./ui/SkillBadge.astro";
+import { skills } from "../data/site";
+---
+
+<section id="skills" class="scroll-mt-24 py-20">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading title="Skills" />
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        skills.map((category) => (
+          <div class="rounded-xl border border-border-default bg-bg-secondary/30 p-6 backdrop-blur-sm transition-all hover:border-border-hover/30">
+            <div class="mb-4 flex items-center gap-3">
+              <span class="text-2xl">{category.icon}</span>
+              <h3 class="font-mono text-sm font-semibold text-text-primary">
+                {category.category}
+              </h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              {category.items.map((item) => (
+                <SkillBadge text={item} />
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

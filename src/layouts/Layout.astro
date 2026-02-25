@@ -1,0 +1,55 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "セキュリティとインフラを守り、ローカルAIを駆使する情報系エンジニアのポートフォリオ" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#020617" />
+
+    <!-- OGP -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://luy869.net" />
+
+    <!-- Fonts: Inter + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <!-- Cyber grid background -->
+    <div
+      class="fixed inset-0 -z-10 bg-grid-pattern [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]"
+      aria-hidden="true"
+    >
+    </div>
+
+    <!-- Glow orb top-right -->
+    <div
+      class="fixed -top-40 -right-40 w-96 h-96 bg-cyber-cyan/5 rounded-full blur-3xl -z-10"
+      aria-hidden="true"
+    >
+    </div>
+
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  @import "../styles/global.css";
+</style>

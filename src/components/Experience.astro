@@ -1,0 +1,48 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import { experience, hobbies } from "../data/site";
+---
+
+<section id="experience" class="scroll-mt-24 py-20">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading title="Experience" />
+
+    <!-- Experience timeline -->
+    <div class="relative ml-4 border-l-2 border-border-default pl-8">
+      {
+        experience.map((item, index) => (
+          <div class="relative mb-10 last:mb-0">
+            {/* Timeline dot */}
+            <div class="absolute -left-[calc(2rem+5px)] top-1.5 h-3 w-3 rounded-full border-2 border-cyber-cyan bg-bg-primary" />
+
+            <h3 class="mb-1 text-lg font-bold text-text-primary">
+              {item.title}
+            </h3>
+            <p class="font-mono text-sm text-cyber-cyan">{item.role}</p>
+            {item.period && (
+              <p class="mt-1 text-xs text-text-muted">{item.period}</p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Hobbies -->
+    <div class="mt-16">
+      <h3
+        class="mb-6 flex items-center gap-2 font-mono text-lg font-semibold text-text-primary"
+      >
+        <span class="text-cyber-emerald">$</span> Interests
+      </h3>
+      <div class="flex flex-wrap gap-3">
+        {
+          hobbies.map((hobby) => (
+            <span class="inline-flex items-center rounded-lg border border-cyber-emerald/20 bg-cyber-emerald/5 px-4 py-2 text-sm text-cyber-emerald">
+              {hobby}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

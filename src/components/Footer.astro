@@ -1,0 +1,17 @@
+---
+import { profile } from "../data/site";
+---
+
+<footer class="mt-auto border-t border-border-default/50 bg-bg-primary/50">
+  <div
+    class="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 py-8 md:flex-row md:justify-between"
+  >
+    <p class="font-mono text-sm text-text-muted">
+      <span class="text-cyber-cyan">&gt;</span> &copy; {new Date().getFullYear()}
+      {profile.name} — All rights reserved.
+    </p>
+    <p class="font-mono text-xs text-text-muted">
+      Built with <a href="https://astro.build" class="text-text-secondary hover:text-cyber-cyan transition-colors" target="_blank" rel="noopener">Astro</a> + <a href="https://tailwindcss.com" class="text-text-secondary hover:text-cyber-cyan transition-colors" target="_blank" rel="noopener">Tailwind CSS</a>
+    </p>
+  </div>
+</footer>
