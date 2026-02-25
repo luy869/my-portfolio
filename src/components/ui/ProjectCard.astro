@@ -11,47 +11,16 @@ export interface Props {
 const { title, description, tags, featured = false } = Astro.props;
 ---
 
-<article
-  class:list={[
-    "group relative flex flex-col rounded-xl border p-6 transition-all duration-300 backdrop-blur-sm",
-    featured
-      ? "border-cyber-cyan/30 bg-bg-secondary/80 hover:border-cyber-cyan/60 hover:glow-cyan"
-      : "border-border-default bg-bg-secondary/50 hover:border-cyber-cyan/30 hover:bg-bg-secondary/80",
-  ]}
->
-  <!-- Hover gradient overlay -->
-  <div
-    class="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br from-cyber-cyan/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-    aria-hidden="true"
-  >
-  </div>
-
-  <!-- Featured badge -->
-  {
-    featured && (
-      <div class="mb-3">
-        <span class="inline-flex items-center gap-1 rounded-full border border-cyber-emerald/30 bg-cyber-emerald/10 px-2 py-0.5 font-mono text-[10px] font-medium text-cyber-emerald">
-          <span class="h-1.5 w-1.5 rounded-full bg-cyber-emerald" />
-          FEATURED
-        </span>
-      </div>
-    )
-  }
-
-  <!-- Title -->
-  <h3
-    class="relative mb-3 text-xl font-bold text-text-primary transition-colors group-hover:text-cyber-cyan"
-  >
+<article class="group flex flex-col rounded-lg border border-border-default bg-bg-secondary p-6 transition-colors hover:border-border-default hover:bg-bg-card">
+  <h3 class="mb-2 text-base font-semibold text-text-primary group-hover:text-accent transition-colors">
     {title}
   </h3>
 
-  <!-- Description -->
-  <p class="relative mb-5 flex-1 text-sm leading-relaxed text-text-secondary">
+  <p class="mb-4 flex-1 text-sm leading-relaxed text-text-muted">
     {description}
   </p>
 
-  <!-- Tags -->
-  <div class="relative flex flex-wrap gap-2">
+  <div class="flex flex-wrap gap-1.5">
     {tags.map((tag) => <SkillBadge text={tag} />)}
   </div>
 </article>

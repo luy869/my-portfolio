@@ -6,8 +6,6 @@ export interface Props {
 const { id, title } = Astro.props;
 ---
 
-<h2 id={id} class="mb-10 flex items-center gap-3 text-3xl font-bold text-text-primary">
-  <span class="font-mono text-cyber-cyan">~/</span>
-  <span>{title}</span>
-  <span class="hidden flex-1 border-t border-border-default/50 md:block" aria-hidden="true"></span>
+<h2 id={id} class="mb-8 text-xl font-semibold text-text-primary">
+  {title}
 </h2>
