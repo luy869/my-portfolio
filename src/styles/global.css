@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* ========================================
+   Custom Design Tokens & Base Styles
+   ======================================== */
+
+@theme {
+  /* Cyber accent colors */
+  --color-cyber-cyan: #06b6d4;
+  --color-cyber-cyan-dim: #0e7490;
+  --color-cyber-emerald: #10b981;
+  --color-cyber-emerald-dim: #047857;
+  --color-cyber-violet: #8b5cf6;
+
+  /* Background shades */
+  --color-bg-primary: #020617;
+  --color-bg-secondary: #0f172a;
+  --color-bg-card: #1e293b;
+  --color-bg-card-hover: #334155;
+
+  /* Text */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+
+  /* Border */
+  --color-border-default: #1e293b;
+  --color-border-hover: #06b6d4;
+
+  /* Fonts */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ========================================
+   Base layer
+   ======================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg-primary text-text-secondary font-sans antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection {
+    @apply bg-cyber-cyan/30 text-cyber-cyan;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-primary;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-cyber-cyan-dim/50 rounded-full;
+  }
+}
+
+/* ========================================
+   Utility classes for cyber effects
+   ======================================== */
+@layer utilities {
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.15),
+                0 0 60px rgba(6, 182, 212, 0.05);
+  }
+
+  .glow-cyan-strong {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3),
+                0 0 60px rgba(6, 182, 212, 0.1);
+  }
+
+  .text-gradient-cyber {
+    background: linear-gradient(135deg, #06b6d4, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(79, 79, 79, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(79, 79, 79, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}

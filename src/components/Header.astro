@@ -1,0 +1,95 @@
+---
+import { profile } from "../data/site";
+
+const navItems = [
+  { label: "Skills", href: "#skills" },
+  { label: "Projects", href: "#projects" },
+  { label: "Experience", href: "#experience" },
+];
+---
+
+<header
+  class="fixed top-0 left-0 right-0 z-50 border-b border-border-default/50 bg-bg-primary/80 backdrop-blur-xl"
+>
+  <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <!-- Logo -->
+    <a
+      href="/"
+      class="font-mono text-lg font-bold text-text-primary transition-colors hover:text-cyber-cyan"
+    >
+      <span class="text-cyber-cyan">~/</span>{profile.name}
+    </a>
+
+    <!-- Nav links -->
+    <ul class="hidden items-center gap-8 md:flex">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="font-mono text-sm text-text-secondary transition-colors hover:text-cyber-cyan"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- Mobile menu button -->
+    <button
+      id="mobile-menu-btn"
+      class="flex items-center justify-center rounded-lg border border-border-default p-2 text-text-secondary transition-colors hover:border-cyber-cyan hover:text-cyber-cyan md:hidden"
+      aria-label="メニューを開く"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-border-default/50 bg-bg-primary/95 backdrop-blur-xl md:hidden"
+  >
+    <ul class="flex flex-col gap-1 px-6 py-4">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="block rounded-lg px-4 py-3 font-mono text-sm text-text-secondary transition-colors hover:bg-bg-card hover:text-cyber-cyan"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-menu");
+  btn?.addEventListener("click", () => {
+    menu?.classList.toggle("hidden");
+  });
+  // Close on link click
+  menu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      menu?.classList.add("hidden");
+    });
+  });
+</script>
