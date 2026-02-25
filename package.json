@@ -19,7 +19,11 @@
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.1"
   },
-  "devDependencies": {
-    "wrangler": "^4.68.1"
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
   }
 }
