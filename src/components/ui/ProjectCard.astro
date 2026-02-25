@@ -8,11 +8,11 @@ export interface Props {
   featured?: boolean;
 }
 
-const { title, description, tags, featured = false } = Astro.props;
+const { title, description, tags } = Astro.props;
 ---
 
-<article class="group flex flex-col rounded-lg border border-border-default bg-bg-secondary p-6 transition-colors hover:border-border-default hover:bg-bg-card">
-  <h3 class="mb-2 text-base font-semibold text-text-primary group-hover:text-accent transition-colors">
+<article class="group flex flex-col rounded-lg border border-border-default bg-bg-secondary p-5 transition-colors hover:bg-bg-card">
+  <h3 class="mb-2 text-sm font-semibold text-text-primary">
     {title}
   </h3>
 
