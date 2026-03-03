@@ -6,12 +6,16 @@ export interface Props {
   description: string;
   tags: string[];
   featured?: boolean;
+  link?: string;
 }
 
-const { title, description, tags } = Astro.props;
+const { title, description, tags, link } = Astro.props;
 ---
 
-<article class="group flex flex-col rounded-lg border border-border-default bg-bg-secondary p-5 transition-colors hover:bg-bg-card">
+<article class={`group flex flex-col rounded-lg border border-border-default bg-bg-secondary p-5 transition-colors hover:bg-bg-card${link ? ' cursor-pointer' : ''}`}>
+  {link && (
+    <a href={link} class="absolute inset-0" aria-label={title} />
+  )}
   <h3 class="mb-2 text-sm font-semibold text-text-primary">
     {title}
   </h3>
