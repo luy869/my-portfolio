@@ -29,30 +29,45 @@ export const skills: SkillCategory[] = [
     {
         category: "Backend / CLI",
         icon: "⚡",
-        items: ["Python", "Node.js", "Go", "Shell/Bash", "PowerShell"],
+        items: ["Python", "Node.js", "Go", "Discord Bot", "CLI Tools", "JSON Processing", "Discord API"],
     },
     {
-        category: "Frontend",
-        icon: "🎨",
-        items: ["HTML5", "CSS3", "JavaScript", "React"],
-    },
-    {
-        category: "Infrastructure",
+        category: "Infrastructure / Network",
         icon: "🏗️",
-        items: ["Docker", "Linux (Ubuntu)", "Cloudflare", "WSL"],
+        items: [
+            "Docker",
+            "Docker Compose",
+            "Linux (Ubuntu)",
+            "WSL",
+            "Cloudflare",
+            "DNS / ドメイン管理",
+            "サーバー構築・最適化",
+        ],
     },
     {
         category: "AI / LLM",
         icon: "🤖",
-        items: ["Local LLMs (Qwen, FLUX.1)", "Gemini API", "AI Agent (CrewAI)"],
+        items: ["Ollama", "ComfyUI", "Stable Diffusion", "FLUX / SDXL", "Gemma / Qwen", "Local LLM運用"],
     },
     {
-        category: "Hardware",
-        icon: "🔧",
-        items: [
-            "カスタムPCチューニング (i7 + RTX 5080 & 3080)",
-            "VR (Quest 3)",
-        ],
+        category: "Frontend / Web",
+        icon: "🌐",
+        items: ["TypeScript / JavaScript", "React / Next.js / Vue.js", "Tailwind CSS", "HTML / CSS"],
+    },
+    {
+        category: "Tools / DevOps",
+        icon: "🛠️",
+        items: ["Git / GitHub", "VSCode", "npm / pip", "Bash / PowerShell", "CI/CD (GitHub Actions)"],
+    },
+    {
+        category: "Hardware / Optimization",
+        icon: "⚙️",
+        items: ["自作PC / ハードウェア構成", "マルチGPU環境構築", "GPU運用"],
+    },
+    {
+        category: "Experience / Other",
+        icon: "🎓",
+        items: ["API Integration (API連携)", "Game Server Administration", "Team Development (チーム開発)"],
     },
 ];
 
