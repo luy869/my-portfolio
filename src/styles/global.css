@@ -1,29 +1,29 @@
 @import "tailwindcss";
 
 /* ========================================
-   Warm Light Theme — Design Tokens
+   Clean Light Theme — Design Tokens
    ======================================== */
 
 @theme {
-  /* Warm accent — brown/amber tones */
-  --color-accent: #92400e;
-  --color-accent-light: #b45309;
-  --color-accent-subtle: rgba(146, 64, 14, 0.06);
+  /* Accent — blue */
+  --color-accent: #2563eb;
+  --color-accent-light: #3b82f6;
+  --color-accent-subtle: rgba(37, 99, 235, 0.07);
 
-  /* Warm neutral palette */
-  --color-bg-primary: #faf8f5;
-  --color-bg-secondary: #ffffff;
-  --color-bg-card: #f5f0eb;
-  --color-bg-card-hover: #ece5dc;
+  /* Neutral palette */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-card: #f1f5f9;
+  --color-bg-card-hover: #e2e8f0;
 
   /* Text hierarchy */
-  --color-text-primary: #1c1917;
-  --color-text-secondary: #44403c;
-  --color-text-muted: #78716c;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
 
   /* Borders */
-  --color-border-default: #e7e0d8;
-  --color-border-subtle: #f0ebe4;
+  --color-border-default: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
 
   /* Fonts */
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;

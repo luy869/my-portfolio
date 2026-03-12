@@ -8,17 +8,19 @@ const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <section id="projects" class="scroll-mt-24 py-14">
-  <div class="mx-auto max-w-3xl px-6">
+  <div class="mx-auto max-w-6xl px-8">
     <SectionHeading title="Projects" />
 
-    <div class="grid gap-4 md:grid-cols-2">
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {
         sortedProjects.map((project) => (
           <ProjectCard
+            slug={project.id}
             title={project.data.title}
             description={project.data.description}
             tags={project.data.tags}
             link={project.data.link}
+            github={project.data.github}
           />
         ))
       }

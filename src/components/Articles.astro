@@ -1,0 +1,67 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+
+interface ZennArticle {
+  title: string;
+  slug: string;
+  published_at: string;
+  liked_count: number;
+  emoji: string;
+}
+
+let articles: ZennArticle[] = [];
+try {
+  const res = await fetch("https://zenn.dev/api/articles?username=luy849&order=latest");
+  const data = await res.json();
+  articles = data.articles ?? [];
+} catch {
+  // ビルド時にAPIが取れなくても壊れないようにフォールバック
+}
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}年${d.getMonth() + 1}月`;
+}
+---
+
+<section id="articles" class="scroll-mt-24 py-14">
+  <div class="mx-auto max-w-6xl px-8">
+    <SectionHeading title="Articles" />
+
+    <div class="space-y-3">
+      {articles.map((article) => (
+        <a
+          href={`https://zenn.dev/luy849/articles/${article.slug}`}
+          target="_blank"
+          rel="noopener"
+          class="flex items-center justify-between rounded-lg border border-border-default bg-bg-secondary p-5 transition-colors hover:bg-bg-card"
+        >
+          <div class="flex items-center gap-4 min-w-0">
+            <span class="shrink-0 text-2xl" aria-hidden="true">{article.emoji}</span>
+            <p class="truncate text-sm font-medium text-text-primary">{article.title}</p>
+          </div>
+          <div class="ml-4 flex shrink-0 items-center gap-4 text-xs text-text-muted">
+            <span class="hidden sm:block">{formatDate(article.published_at)}</span>
+            <span class="flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              {article.liked_count}
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-6">
+      <a
+        href="https://zenn.dev/luy849"
+        target="_blank"
+        rel="noopener"
+        class="text-sm text-text-muted transition-colors hover:text-text-primary"
+      >
+        Zenn でもっと読む →
+      </a>
+    </div>
+  </div>
+</section>

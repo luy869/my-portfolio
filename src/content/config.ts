@@ -8,9 +8,8 @@ const projects = defineCollection({
         description: z.string(),
         tags: z.array(z.string()),
         order: z.number().default(0),
-        url: z.string().url().optional(),
-        link: z.string().optional(),
-        github: z.string().url().optional(),
+        link: z.string().optional(),       // 外部デモ・サービスURL
+        github: z.string().url().optional(), // GitHubリポジトリURL
         image: z.string().optional(),
         featured: z.boolean().default(false),
     }),

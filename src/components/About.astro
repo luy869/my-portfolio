@@ -1,0 +1,31 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import { about } from "../data/site";
+---
+
+<section id="about" class="scroll-mt-24 py-14">
+  <div class="mx-auto max-w-6xl px-8">
+    <SectionHeading title="About" />
+
+    <div class="grid gap-10 lg:grid-cols-3">
+      {/* 左: 文章 */}
+      <div class="space-y-4 lg:col-span-2">
+        {about.paragraphs.map((p) => (
+          <p class="text-sm leading-loose text-text-secondary">{p}</p>
+        ))}
+      </div>
+
+      {/* 右: ハイライト */}
+      <div class="space-y-3">
+        {about.highlights.map((item) => (
+          <div class="rounded-lg border border-border-default bg-bg-secondary p-4">
+            <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-accent">
+              {item.label}
+            </p>
+            <p class="text-sm text-text-primary">{item.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
