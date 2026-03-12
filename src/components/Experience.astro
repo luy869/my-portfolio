@@ -1,41 +1,29 @@
 ---
 import SectionHeading from "./ui/SectionHeading.astro";
-import { experience, hobbies } from "../data/site";
+import { experience } from "../data/site";
 ---
 
 <section id="experience" class="scroll-mt-24 py-14">
-  <div class="mx-auto max-w-3xl px-6">
+  <div class="mx-auto max-w-6xl px-8">
     <SectionHeading title="Experience" />
 
     <div class="space-y-4">
       {
         experience.map((item) => (
           <div class="rounded-lg border border-border-default bg-bg-secondary p-5">
-            <h3 class="text-sm font-semibold text-text-primary">
-              {item.title}
-            </h3>
-            <p class="mt-1 text-sm text-text-muted">{item.role}</p>
-            {item.period && (
-              <p class="mt-0.5 text-xs text-text-muted">{item.period}</p>
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3 class="text-sm font-semibold text-text-primary">{item.title}</h3>
+              {item.period && (
+                <span class="text-xs text-text-muted">{item.period}</span>
+              )}
+            </div>
+            <p class="mt-1 text-sm text-accent">{item.role}</p>
+            {item.description && (
+              <p class="mt-2 text-sm leading-relaxed text-text-muted">{item.description}</p>
             )}
           </div>
         ))
       }
-    </div>
-
-    <div class="mt-10">
-      <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-accent">
-        Interests
-      </h3>
-      <div class="flex flex-wrap gap-2">
-        {
-          hobbies.map((hobby) => (
-            <span class="rounded-full border border-border-default bg-bg-secondary px-3 py-1 text-xs text-text-muted">
-              {hobby}
-            </span>
-          ))
-        }
-      </div>
     </div>
   </div>
 </section>

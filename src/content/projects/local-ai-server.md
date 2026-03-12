@@ -1,17 +1,40 @@
 ---
 title: "大規模ローカルAIサーバー構築"
-description: "RTX 5080+3080の計算資源を活用し、HuggingFaceのGated Modelや画像生成（FLUX.1）をローカルで自ホスト運用。マルチGPU環境でのAI推論基盤。"
-tags: ["Infrastructure", "AI/LLM", "Hardware", "Docker"]
+description: "RTX 5080+3080のデュアルGPU環境でLLM・画像生成モデルをセルフホスト。Docker Composeによるマルチサービス管理とGPUリソース最適化。"
+tags: ["Docker", "Linux", "Ollama", "FLUX.1", "GPU"]
 order: 3
 featured: true
 ---
 
-## 概要
+## 背景・動機
 
-RTX 5080とRTX 3080のデュアルGPU環境を活用した、完全ローカルのAI推論サーバー。HuggingFaceのGated ModelやFLUX.1による画像生成をセルフホスティングで運用。
+[TODO: なぜクラウドAPIではなくローカルで動かすことにしたか。
+例: 「APIコストの積み上がり」「プライバシー」「低レイテンシ」「モデルのカスタマイズ」など、主な動機を書く]
 
-### 構成
+## 構成
 
-- **GPU**: RTX 5080 + RTX 3080 デュアル構成
-- **モデル**: Qwen, FLUX.1 等のローカルLLM/画像生成モデル
-- **管理**: Docker Composeによるコンテナオーケストレーション
+- **GPU**: RTX 5080（メイン推論）+ RTX 3080（サブ / 画像生成）
+- **OS**: Ubuntu + Docker Compose
+- **主なサービス**: Ollama（LLM推論）、ComfyUI（画像生成）、[TODO: 他に動かしているサービスがあれば]
+
+## 技術的な課題
+
+[TODO: ハードウェア・ソフトウェア両面での問題を具体的に。
+例:
+- 2枚のGPUへのモデルのメモリ割り当て（VRAM管理）
+- Docker内でのNVIDIA GPU パススルー設定
+- 複数サービスが同時にGPUを使う際のリソース競合
+- 大容量モデルのダウンロード・バージョン管理]
+
+## 実装・運用のポイント
+
+[TODO: Docker Composeの構成で工夫した点。
+例:
+- サービスごとの`deploy.resources.reservations.devices`でGPU割り当てを制御
+- モデルデータをボリュームマウントで永続化
+- ヘルスチェックとサービス依存関係の設定]
+
+## 運用して気づいたこと・改善点
+
+[TODO: 実際に動かして出てきた問題や改善。
+例: VRAMが足りなくてモデルを量子化した、熱管理の問題、ネットワーク越しのAPI応答速度など]
