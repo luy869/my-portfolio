@@ -14,11 +14,11 @@ export const profile = {
     name: "ゆう",
     handle: "luy869",
     // ↓ トップに大きく表示される一言。技術的強みを端的に。
-    catchphrase: "[TODO: あなたを一言で表すキャッチコピー]",
+    catchphrase: "高度な技術を誰もが使いやすい形にするエンジニア",
     status: "東京工科大学大学コンピュータサイエンス学部 2年",
     // ↓ キャッチコピーの下に表示される自己PR。2〜3文で。
     //   「なぜその技術を使うのか」「どんなエンジニアを目指しているのか」を具体的に。
-    bio: "[TODO: 自己PR。技術への興味の軸、目指すエンジニア像など。]",
+    bio: "ローカルLLMや画像生成AIを自前環境で動かすのが最近の趣味です。またAIを組み込んだアプリ開発なども行っています。",
 } as const;
 
 export interface SkillCategory {
@@ -35,11 +35,11 @@ export const skills: SkillCategory[] = [
     },
     {
         category: "AI / LLM",
-        items: ["Ollama", "Local LLM運用", "Gemini API", "ComfyUI", "FLUX.1 / SDXL"],
+        items: ["Ollama", "Local LLM運用", "Gemini API", "ComfyUI", "画像生成AI"],
     },
     {
         category: "Infrastructure",
-        items: ["Docker", "Docker Compose", "Linux (Ubuntu)", "Cloudflare", "マルチGPU環境"],
+        items: ["Docker", "Linux", "Cloudflare", "サーバー構築"],
     },
     {
         category: "Frontend / Web",
@@ -47,7 +47,7 @@ export const skills: SkillCategory[] = [
     },
     {
         category: "Tools",
-        items: ["Git / GitHub", "GitHub Actions", "Bash"],
+        items: ["Git / GitHub", "Claude Code", "Bash"],
     },
 ];
 
@@ -61,14 +61,14 @@ export interface ExperienceItem {
 export const experience: ExperienceItem[] = [
     {
         title: "HRクラウド株式会社",
-        role: "[TODO: 職種・インターン種別]",
-        period: "[TODO: 期間 例: 2025年8月]",
-        description: "[TODO: 担当タスク、使用技術、学んだことを2〜3文で具体的に]",
+        role: "長期インターン バックエンドエンジニア",
+        period: "2025年9月～現在",
+        description: "インターンとして、自社プロダクト「採用一括かんりくん」の開発に携わっています。\n具体的にはPHP（FuelPHP）を用いた機能の実装・改修\nReact を活用した管理画面 UI の実装・改修\n既存機能のパフォーマンス改善、バグ修正",
     },
     {
         title: "大学 Linux Club",
-        role: "[TODO: 役職名]",
-        description: "[TODO: 具体的な活動内容。企画したイベント、策定したポリシーの概要など]",
+        role: "運営補佐",
+        description: "メンバーとして積極的なイベント参加や技術交流を行っています。",
     },
 ];
 
