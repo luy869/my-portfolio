@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravity Wars</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; overflow: hidden; font-family: 'Courier New', monospace; color: white; }
+canvas { display: block; }
+#screens {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; z-index: 10;
+}
+.screen {
+  display: none; text-align: center;
+  background: rgba(0, 4, 20, 0.90);
+  border: 1px solid #224; border-radius: 8px;
+  padding: 40px 60px; pointer-events: all;
+}
+.screen.active { display: block; }
+.screen h1 { font-size: 52px; margin-bottom: 14px; letter-spacing: 4px; }
+.screen p  { font-size: 14px; color: #99b; margin: 6px 0; }
+.key { color: #6cf; background: #113; padding: 1px 6px; border-radius: 3px; }
+.screen button {
+  margin-top: 26px; padding: 11px 36px; font-size: 16px;
+  background: #122; color: white; border: 1px solid #449;
+  border-radius: 4px; cursor: pointer; font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+.screen button:hover { background: #234; border-color: #66c; }
+#backLink {
+  position: fixed; top: 8px; left: 10px; z-index: 50;
+  color: #556; font-size: 11px; text-decoration: none;
+  font-family: 'Courier New', monospace;
+  opacity: 0.4; transition: opacity 0.2s;
+}
+#backLink:hover { opacity: 1; color: #99f; }
+</style>
+</head>
+<body>
+<a href="/" id="backLink">← luy869.net</a>
+<canvas id="c"></canvas>
+<div id="screens">
+  <div class="screen active" id="startScreen">
+    <h1 style="color:#5bf">GRAVITY<br>WARS</h1>
+    <p style="color:#7af;margin:10px 0 16px">重力を支配し、星系を征服せよ</p>
+    <p><span class="key">WASD</span> &nbsp;推進</p>
+    <p><span class="key">マウス</span> &nbsp;照準 &nbsp;|&nbsp; <span class="key">左クリック</span> &nbsp;射撃</p>
+    <p><span class="key">惑星に近づく</span> &nbsp;制圧開始</p>
+    <br>
+    <p style="color:#fa7">6惑星を全て制圧すれば勝利</p>
+    <p style="color:#f77;font-size:12px">旗艦撃墜 + 拠点なし = 敗北</p>
+    <button id="startBtn">▶ START GAME</button>
+  </div>
+  <div class="screen" id="winScreen">
+    <h1 style="color:#4f8">VICTORY</h1>
+    <p>全惑星の制圧に成功した</p>
+    <p style="color:#7af;font-size:12px;margin-top:8px">星系はあなたの手に</p>
+    <button id="winBtn">もう一度</button>
+  </div>
+  <div class="screen" id="loseScreen">
+    <h1 style="color:#f44">GAME OVER</h1>
+    <p>星系は敵に支配された</p>
+    <p style="color:#f97;font-size:12px;margin-top:8px">再起を図れ</p>
+    <button id="loseBtn">もう一度</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ─────────────────────────────────────────────
+//  CONSTANTS
+// ─────────────────────────────────────────────
+const WW = 3000, WH = 3000;
+const G_SHIP    = 1_100_000;  // gravitational accel for ships
+const G_BULLET  = 4_000_000;  // 4x → bullets curve visibly near planets
+const THRUST     = 210;       // px/s²
+const MAX_SPD    = 360;       // px/s
+const B_SPD      = 510;       // bullet speed px/s
+const B_LIFE     = 5.0;       // bullet lifetime (s)
+const SHOOT_CD   = 0.26;      // fire cooldown (s)
+const AI_RANGE   = 460;       // px: AI shoots within this dist
+const CAP_RATE   = 0.14;      // capture progress per ship per second
+const CAP_DECAY  = 0.04;      // decay when no ships present
+const SPAWN_INT  = 8;         // seconds per ship spawn per planet
+const MAX_AI     = 13;        // max AI ships per team
+const PLAYER_HP  = 120;
+const SHIP_HP    = 30;
+const RESPAWN_T  = 4;         // player respawn delay (s)
+const B_DMG      = 10;
+
+const PLANET_DEFS = [
+  { x: 650,  y: 2350, r: 50, grav: 1.3, owner: 'player',  name: 'Alpha',   hue: 210 },
+  { x: 2350, y: 650,  r: 50, grav: 1.3, owner: 'enemy',   name: 'Omega',   hue: 10  },
+  { x: 1400, y: 1300, r: 44, grav: 1.1, owner: 'neutral', name: 'Beta',    hue: 130 },
+  { x: 2400, y: 2000, r: 38, grav: 0.9, owner: 'neutral', name: 'Gamma',   hue: 280 },
+  { x: 600,  y: 1000, r: 38, grav: 0.9, owner: 'neutral', name: 'Delta',   hue: 50  },
+  { x: 1750, y: 2450, r: 40, grav: 1.0, owner: 'neutral', name: 'Epsilon', hue: 170 },
+];
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+let planets, ships, bullets, particles;
+let player;
+let camera      = { x: 0, y: 0 };
+let keys        = {};
+let mouseWorld  = { x: 0, y: 0 };
+let mouseDown   = false;
+let gameRunning = false;
+let gameOver    = null;
+let respawnTimer = 0;
+let shakeTimer  = 0;
+let shakeAmt    = 0;
+
+// ─────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────
+function teamColor(team) {
+  return team === 'player' ? '#44ccff' : team === 'enemy' ? '#ff6644' : '#778899';
+}
+
+function resetScreens() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+}
+
+function checkWin() {
+  if (gameOver) return;
+  if (planets.every(p => p.owner === 'player')) {
+    gameOver = 'win';
+    document.getElementById('winScreen').classList.add('active');
+  }
+}
+
+// ─────────────────────────────────────────────
+//  PLANET
+// ─────────────────────────────────────────────
+class Planet {
+  constructor(def) {
+    Object.assign(this, def);
+    this.capProgress = 0;
+    this.capTeam     = null;
+    this.spawnTimer  = SPAWN_INT * (0.2 + Math.random() * 0.6);
+    this.rot         = Math.random() * Math.PI * 2;
+  }
+
+  update(dt) {
+    this.rot += dt * 0.14;
+
+    // Count ships in capture range
+    let net = 0;
+    for (const s of ships) {
+      if (!s.alive) continue;
+      if (Math.hypot(s.x - this.x, s.y - this.y) < this.r * 2.6)
+        net += s.team === 'player' ? 1 : -1;
+    }
+
+    if (net !== 0) {
+      const side = net > 0 ? 'player' : 'enemy';
+      if (this.owner !== side) {
+        this.capTeam     = side;
+        this.capProgress += Math.abs(net) * CAP_RATE * dt;
+        if (this.capProgress >= 1) {
+          this.owner       = side;
+          this.capProgress = 0;
+          this.capTeam     = null;
+          spawnCapBurst(this);
+          checkWin();
+        }
+      }
+    } else {
+      this.capProgress = Math.max(0, this.capProgress - CAP_DECAY * dt);
+    }
+
+    // Ship spawning
+    if (this.owner !== 'neutral') {
+      this.spawnTimer -= dt;
+      if (this.spawnTimer <= 0) {
+        this.spawnTimer = SPAWN_INT;
+        const team = this.owner;
+        const cnt  = ships.filter(s => !s.isPlayer && s.team === team && s.alive).length;
+        if (cnt < MAX_AI) {
+          const ang = Math.random() * Math.PI * 2;
+          const d   = this.r + 26;
+          ships.push(new Ship(
+            this.x + Math.cos(ang) * d,
+            this.y + Math.sin(ang) * d,
+            -Math.sin(ang) * 120,
+             Math.cos(ang) * 120,
+            team, false
+          ));
+        }
+      }
+    }
+  }
+
+  draw() {
+    const col = teamColor(this.owner);
+
+    // Outer glow
+    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 2.8);
+    g.addColorStop(0, col + '22');
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r * 2.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Planet body
+    const bg = ctx.createRadialGradient(
+      this.x - this.r * 0.35, this.y - this.r * 0.35, 0,
+      this.x, this.y, this.r
+    );
+    bg.addColorStop(0,   `hsl(${this.hue},35%,65%)`);
+    bg.addColorStop(0.6, `hsl(${this.hue},28%,35%)`);
+    bg.addColorStop(1,   `hsl(${this.hue},20%,15%)`);
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ownership ring
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = 2.5;
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r + 7, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Capture progress arc
+    if (this.capProgress > 0 && this.capTeam) {
+      ctx.strokeStyle = teamColor(this.capTeam);
+      ctx.lineWidth   = 4;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r + 15,
+        -Math.PI / 2,
+        -Math.PI / 2 + this.capProgress * Math.PI * 2
+      );
+      ctx.stroke();
+    }
+
+    // Name label
+    ctx.fillStyle  = '#cce';
+    ctx.font       = '11px Courier New';
+    ctx.textAlign  = 'center';
+    ctx.fillText(this.name, this.x, this.y + this.r + 22);
+    ctx.textAlign  = 'left';
+  }
+}
+
+// ─────────────────────────────────────────────
+//  SHIP
+// ─────────────────────────────────────────────
+class Ship {
+  constructor(x, y, vx, vy, team, isPlayer) {
+    this.x = x; this.y = y;
+    this.vx = vx; this.vy = vy;
+    this.team     = team;
+    this.isPlayer = isPlayer;
+    this.angle    = Math.atan2(vy, vx);
+    this.hp       = isPlayer ? PLAYER_HP : SHIP_HP;
+    this.maxHp    = this.hp;
+    this.alive    = true;
+    this.shootCd  = 0;
+    this.thrustOn = false;
+    this.flamePh  = Math.random() * Math.PI * 2;
+    // AI
+    this.aiTimer  = Math.random() * 2;
+    this.aiMode   = 'capture';
+    this.aiTarget = null;
+    this.stuckT   = 0;
+  }
+
+  update(dt) {
+    if (!this.alive) return;
+
+    // Gravity from planets
+    for (const p of planets) {
+      const dx = p.x - this.x, dy = p.y - this.y;
+      const d2 = Math.max(dx*dx + dy*dy, (p.r + 5) * (p.r + 5));
+      const d  = Math.sqrt(d2);
+      const a  = G_SHIP * p.grav / d2;
+      this.vx += a * (dx / d) * dt;
+      this.vy += a * (dy / d) * dt;
+    }
+
+    this.thrustOn = false;
+    if (this.isPlayer) this._playerInput(dt);
+    else               this._aiTick(dt);
+
+    // Speed cap
+    const spd = Math.hypot(this.vx, this.vy);
+    if (spd > MAX_SPD) { this.vx = this.vx / spd * MAX_SPD; this.vy = this.vy / spd * MAX_SPD; }
+
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.flamePh += dt * 18;
+    this.shootCd  = Math.max(0, this.shootCd - dt);
+
+    // World boundary bounce
+    if (this.x <  10)    { this.x =  10;    this.vx =  Math.abs(this.vx); }
+    if (this.x > WW - 10){ this.x = WW - 10; this.vx = -Math.abs(this.vx); }
+    if (this.y <  10)    { this.y =  10;    this.vy =  Math.abs(this.vy); }
+    if (this.y > WH - 10){ this.y = WH - 10; this.vy = -Math.abs(this.vy); }
+
+    // Planet surface bounce
+    for (const p of planets) {
+      const dx = this.x - p.x, dy = this.y - p.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < p.r + 8) {
+        const nx = dx / dist, ny = dy / dist;
+        this.x = p.x + nx * (p.r + 9);
+        this.y = p.y + ny * (p.r + 9);
+        const dot = this.vx * nx + this.vy * ny;
+        this.vx -= 2 * dot * nx * 0.5;
+        this.vy -= 2 * dot * ny * 0.5;
+      }
+    }
+  }
+
+  _playerInput(dt) {
+    let tx = 0, ty = 0;
+    if (keys['w'] || keys['arrowup'])    ty -= 1;
+    if (keys['s'] || keys['arrowdown'])  ty += 1;
+    if (keys['a'] || keys['arrowleft'])  tx -= 1;
+    if (keys['d'] || keys['arrowright']) tx += 1;
+    if (tx || ty) {
+      const m = Math.hypot(tx, ty);
+      this.vx += (tx / m) * THRUST * dt;
+      this.vy += (ty / m) * THRUST * dt;
+      this.thrustOn = true;
+      if (Math.random() < 0.3) spawnExhaust(this, tx / m, ty / m);
+    }
+    this.angle = Math.atan2(mouseWorld.y - this.y, mouseWorld.x - this.x);
+    if (mouseDown && this.shootCd <= 0) this._shoot(this.angle);
+  }
+
+  _aiTick(dt) {
+    const et = this.team === 'player' ? 'enemy' : 'player';
+
+    this.aiTimer -= dt;
+    if (this.aiTimer <= 0) {
+      this.aiTimer = 1.2 + Math.random() * 1.0;
+      this._selectTarget(et);
+    }
+
+    // Stuck in capture mode? force retarget
+    if (this.aiMode === 'capture') {
+      this.stuckT += dt;
+      if (this.stuckT > 7) { this.stuckT = 0; this.aiTimer = 0; }
+    } else {
+      this.stuckT = 0;
+    }
+
+    let tx = 0, ty = 0;
+
+    if (this.aiMode === 'attack' && this.aiTarget && this.aiTarget.alive) {
+      const dx = this.aiTarget.x - this.x, dy = this.aiTarget.y - this.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 130) { tx = dx / dist; ty = dy / dist; }
+      this.angle = Math.atan2(dy, dx);
+      if (dist < AI_RANGE && this.shootCd <= 0) {
+        // Lead shot
+        const lt = dist / B_SPD;
+        const ax = this.aiTarget.x + this.aiTarget.vx * lt;
+        const ay = this.aiTarget.y + this.aiTarget.vy * lt;
+        this.angle = Math.atan2(ay - this.y, ax - this.x);
+        this._shoot(this.angle);
+      }
+    } else if (this.aiMode === 'capture' && this.aiTarget) {
+      const p    = this.aiTarget;
+      const dx   = p.x - this.x, dy = p.y - this.y;
+      const dist = Math.hypot(dx, dy);
+      const targetR = p.r * 2.0;
+      if      (dist > targetR + 25) { tx = dx / dist; ty = dy / dist; }
+      else if (dist < targetR - 25) { tx = -dx / dist; ty = -dy / dist; }
+      this.angle = Math.atan2(dy, dx);
+    }
+
+    if (tx || ty) {
+      const m = Math.hypot(tx, ty);
+      this.vx += (tx / m) * THRUST * 0.82 * dt;
+      this.vy += (ty / m) * THRUST * 0.82 * dt;
+      this.thrustOn = true;
+      if (Math.random() < 0.1) spawnExhaust(this, tx / m, ty / m);
+    }
+  }
+
+  _selectTarget(et) {
+    // Attack nearby enemy
+    let closest = null, closestD = 500;
+    for (const s of ships) {
+      if (s.team !== et || !s.alive) continue;
+      const d = Math.hypot(s.x - this.x, s.y - this.y);
+      if (d < closestD) { closestD = d; closest = s; }
+    }
+    if (closest) { this.aiMode = 'attack'; this.aiTarget = closest; return; }
+
+    // Capture nearest unclaimed / enemy planet (spread ships out)
+    const cands = planets.filter(p => p.owner !== this.team);
+    if (!cands.length) {
+      const any = ships.find(s => s.team === et && s.alive);
+      if (any) { this.aiMode = 'attack'; this.aiTarget = any; }
+      return;
+    }
+    // Score = distance + penalty if allies already heading there
+    const scored = cands.map(p => {
+      const myDist  = Math.hypot(p.x - this.x, p.y - this.y);
+      const already = ships.filter(s => s !== this && s.team === this.team && s.aiMode === 'capture' && s.aiTarget === p).length;
+      return { p, score: myDist + already * 450 };
+    });
+    scored.sort((a, b) => a.score - b.score);
+    this.aiMode   = 'capture';
+    this.aiTarget = scored[0].p;
+  }
+
+  _shoot(angle) {
+    this.shootCd = SHOOT_CD;
+    const ox = Math.cos(angle) * 16, oy = Math.sin(angle) * 16;
+    bullets.push(new Bullet(
+      this.x + ox, this.y + oy,
+      this.vx * 0.4 + Math.cos(angle) * B_SPD,
+      this.vy * 0.4 + Math.sin(angle) * B_SPD,
+      this.team
+    ));
+  }
+
+  takeDamage(dmg) {
+    this.hp -= dmg;
+    spawnHitSpark(this);
+    if (this.hp <= 0) {
+      this.alive = false;
+      spawnExplosion(this);
+      if (this.isPlayer) respawnTimer = RESPAWN_T;
+    }
+  }
+
+  draw() {
+    if (!this.alive) return;
+    const sz  = this.isPlayer ? 12 : 8;
+    const col = this.team === 'player' ? '#4cf' : '#f64';
+
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+
+    // Thrust flame
+    if (this.thrustOn) {
+      const fl = sz * (1.4 + Math.sin(this.flamePh) * 0.5);
+      ctx.fillStyle = `rgba(255,${100 + (Math.sin(this.flamePh) * 80) | 0},20,0.75)`;
+      ctx.beginPath();
+      ctx.moveTo(-sz * 0.7, -sz * 0.55);
+      ctx.lineTo(-sz - fl, 0);
+      ctx.lineTo(-sz * 0.7,  sz * 0.55);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Ship body (triangle)
+    ctx.fillStyle   = col;
+    ctx.strokeStyle = '#fff9';
+    ctx.lineWidth   = 1.2;
+    ctx.beginPath();
+    ctx.moveTo( sz,       0);
+    ctx.lineTo(-sz * 0.7, -sz * 0.7);
+    ctx.lineTo(-sz * 0.35, 0);
+    ctx.lineTo(-sz * 0.7,  sz * 0.7);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Cockpit dot
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(sz * 0.2, 0, sz * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // HP bar for AI ships
+    if (!this.isPlayer) {
+      const bw = 22, bh = 3;
+      const bx = this.x - bw / 2, by = this.y - sz - 9;
+      ctx.fillStyle = '#222';
+      ctx.fillRect(bx, by, bw, bh);
+      ctx.fillStyle = this.team === 'player' ? '#4c8' : '#e43';
+      ctx.fillRect(bx, by, bw * (this.hp / this.maxHp), bh);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+//  BULLET
+// ─────────────────────────────────────────────
+class Bullet {
+  constructor(x, y, vx, vy, team) {
+    this.x = x; this.y = y;
+    this.vx = vx; this.vy = vy;
+    this.team  = team;
+    this.life  = B_LIFE;
+    this.trail = [];
+    this.alive = true;
+  }
+
+  update(dt) {
+    // Planet gravity (stronger → visible curve)
+    for (const p of planets) {
+      const dx = p.x - this.x, dy = p.y - this.y;
+      const d2 = Math.max(dx*dx + dy*dy, (p.r + 5) * (p.r + 5));
+      const d  = Math.sqrt(d2);
+      const a  = G_BULLET * p.grav / d2;
+      this.vx += a * (dx / d) * dt;
+      this.vy += a * (dy / d) * dt;
+    }
+
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > 14) this.trail.shift();
+
+    this.x    += this.vx * dt;
+    this.y    += this.vy * dt;
+    this.life -= dt;
+
+    if (this.life <= 0 || this.x < 0 || this.x > WW || this.y < 0 || this.y > WH) {
+      this.alive = false; return;
+    }
+
+    // Hit ships
+    const et = this.team === 'player' ? 'enemy' : 'player';
+    for (const s of ships) {
+      if (s.team !== et || !s.alive) continue;
+      if (Math.hypot(s.x - this.x, s.y - this.y) < (s.isPlayer ? 14 : 9)) {
+        s.takeDamage(B_DMG);
+        if (s.isPlayer) { shakeTimer = 0.25; shakeAmt = 7; }
+        this.alive = false;
+        return;
+      }
+    }
+
+    // Hit planet
+    for (const p of planets) {
+      if (Math.hypot(p.x - this.x, p.y - this.y) < p.r) {
+        this.alive = false; return;
+      }
+    }
+  }
+
+  draw() {
+    if (!this.alive) return;
+    const col = this.team === 'player' ? '#77eeff' : '#ffaa88';
+
+    // Trail
+    if (this.trail.length > 1) {
+      ctx.strokeStyle = col + '55';
+      ctx.lineWidth   = 2;
+      ctx.beginPath();
+      ctx.moveTo(this.trail[0].x, this.trail[0].y);
+      for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
+      ctx.lineTo(this.x, this.y);
+      ctx.stroke();
+    }
+
+    // Core with glow
+    ctx.shadowColor = col;
+    ctx.shadowBlur  = 9;
+    ctx.fillStyle   = '#fff';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur  = 0;
+  }
+}
+
+// ─────────────────────────────────────────────
+//  PARTICLES
+// ─────────────────────────────────────────────
+class Particle {
+  constructor(x, y, vx, vy, col, life, size) {
+    this.x = x; this.y = y;
+    this.vx = vx; this.vy = vy;
+    this.col  = col;
+    this.life = life; this.maxLife = life;
+    this.size = size;
+    this.alive = true;
+  }
+  update(dt) {
+    this.x += this.vx * dt; this.y += this.vy * dt;
+    this.vx *= 0.96; this.vy *= 0.96;
+    this.life -= dt;
+    if (this.life <= 0) this.alive = false;
+  }
+  draw() {
+    const a = this.life / this.maxLife;
+    ctx.globalAlpha = a;
+    ctx.fillStyle   = this.col;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * a, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+function spawnExplosion(ship) {
+  const col = ship.team === 'player' ? '#4cf' : '#f64';
+  for (let i = 0; i < 30; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = 40 + Math.random() * 200;
+    particles.push(new Particle(
+      ship.x, ship.y,
+      ship.vx * 0.3 + Math.cos(a) * s,
+      ship.vy * 0.3 + Math.sin(a) * s,
+      Math.random() < 0.5 ? col : '#fff',
+      0.4 + Math.random() * 0.8,
+      1.5 + Math.random() * 3
+    ));
+  }
+}
+
+function spawnHitSpark(ship) {
+  for (let i = 0; i < 5; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = 30 + Math.random() * 90;
+    particles.push(new Particle(
+      ship.x, ship.y,
+      Math.cos(a) * s, Math.sin(a) * s,
+      '#ff8', 0.2 + Math.random() * 0.2, 1.5
+    ));
+  }
+}
+
+function spawnCapBurst(planet) {
+  const col = teamColor(planet.owner);
+  for (let i = 0; i < 45; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const s = 30 + Math.random() * 140;
+    particles.push(new Particle(
+      planet.x, planet.y,
+      Math.cos(a) * s, Math.sin(a) * s,
+      Math.random() < 0.6 ? col : '#fff',
+      0.8 + Math.random() * 1.0,
+      2 + Math.random() * 2.5
+    ));
+  }
+}
+
+function spawnExhaust(ship, tx, ty) {
+  particles.push(new Particle(
+    ship.x - tx * 10, ship.y - ty * 10,
+    (-tx + (Math.random() - 0.5) * 0.6) * 55,
+    (-ty + (Math.random() - 0.5) * 0.6) * 55,
+    `hsl(${20 + Math.random() * 30},100%,60%)`,
+    0.18 + Math.random() * 0.18, 2.5
+  ));
+}
+
+// ─────────────────────────────────────────────
+//  STARS (static world-space)
+// ─────────────────────────────────────────────
+const STARS = Array.from({ length: 350 }, () => ({
+  x: Math.random() * WW, y: Math.random() * WH,
+  r: Math.random() * 1.6, a: 0.2 + Math.random() * 0.8
+}));
+
+function drawStars() {
+  for (const s of STARS) {
+    ctx.globalAlpha = s.a * 0.7;
+    ctx.fillStyle   = '#fff';
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// ─────────────────────────────────────────────
+//  HUD
+// ─────────────────────────────────────────────
+function drawHUD() {
+  const W = canvas.width, H = canvas.height;
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Player HP bar
+  if (player.alive) {
+    const bx = 14, by = 14, bw = 190, bh = 15;
+    ctx.fillStyle = '#0009';
+    ctx.fillRect(bx - 2, by - 2, bw + 4, bh + 4);
+    ctx.fillStyle = '#333';
+    ctx.fillRect(bx, by, bw, bh);
+    const r = player.hp / player.maxHp;
+    ctx.fillStyle = r > 0.5 ? '#4d8' : r > 0.25 ? '#ea5' : '#e33';
+    ctx.fillRect(bx, by, bw * r, bh);
+    ctx.strokeStyle = '#557'; ctx.lineWidth = 1;
+    ctx.strokeRect(bx, by, bw, bh);
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Courier New';
+    ctx.fillText(`HULL  ${Math.ceil(player.hp)} / ${player.maxHp}`, bx + 5, by + 11);
+  } else {
+    ctx.font      = 'bold 20px Courier New';
+    ctx.fillStyle = '#f446';
+    const msg = respawnTimer > 0 ? `RESPAWN ${Math.ceil(respawnTimer)}s` : '...';
+    ctx.fillText(msg, W / 2 - ctx.measureText(msg).width / 2, H / 2 + 50);
+  }
+
+  // Planet panel (right)
+  const pw = 168, ph = planets.length * 22 + 14;
+  const px = W - pw - 10, py = 10;
+  ctx.fillStyle = '#00050f99';
+  ctx.fillRect(px, py, pw, ph);
+  ctx.strokeStyle = '#224'; ctx.lineWidth = 1;
+  ctx.strokeRect(px, py, pw, ph);
+
+  planets.forEach((p, i) => {
+    const ry  = py + 18 + i * 22;
+    const col = teamColor(p.owner);
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.arc(px + 11, ry - 4, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ccd'; ctx.font = '12px Courier New';
+    ctx.fillText(p.name, px + 22, ry);
+    if (p.capProgress > 0 && p.capTeam) {
+      ctx.strokeStyle = teamColor(p.capTeam);
+      ctx.lineWidth   = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(px + 90, ry - 5);
+      ctx.lineTo(px + 90 + (pw - 100) * p.capProgress, ry - 5);
+      ctx.stroke();
+    }
+  });
+
+  // Score
+  const pp = planets.filter(p => p.owner === 'player').length;
+  const ep = planets.filter(p => p.owner === 'enemy').length;
+  ctx.font = 'bold 13px Courier New';
+  ctx.fillStyle = '#4cf'; ctx.fillText(`YOU ${pp}/6`, px,      py + ph + 18);
+  ctx.fillStyle = '#f64'; ctx.fillText(`FOE ${ep}/6`, px + 84, py + ph + 18);
+
+  // Minimap
+  drawMinimap(W, H);
+
+  // Controls hint
+  ctx.font      = '11px Courier New';
+  ctx.fillStyle = '#445';
+  ctx.fillText('WASD:推進   クリック:射撃   惑星に近づく:制圧', 14, H - 12);
+
+  ctx.restore();
+}
+
+function drawMinimap(W, H) {
+  const sz = 140, sc = sz / WW;
+  const mx = W - sz - 10, my = H - sz - 36;
+
+  ctx.fillStyle   = '#00050faa';
+  ctx.fillRect(mx, my, sz, sz);
+  ctx.strokeStyle = '#224'; ctx.lineWidth = 1;
+  ctx.strokeRect(mx, my, sz, sz);
+
+  // Viewport rect
+  ctx.strokeStyle = '#fff3'; ctx.lineWidth = 1;
+  ctx.strokeRect(
+    mx + camera.x * sc, my + camera.y * sc,
+    canvas.width * sc, canvas.height * sc
+  );
+
+  // Planets
+  for (const p of planets) {
+    ctx.fillStyle = teamColor(p.owner);
+    ctx.beginPath();
+    ctx.arc(mx + p.x * sc, my + p.y * sc, Math.max(3, p.r * sc * 0.85), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Ships
+  for (const s of ships) {
+    if (!s.alive) continue;
+    if (s.isPlayer) {
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(mx + s.x * sc, my + s.y * sc, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = s.team === 'player' ? '#6df' : '#f87';
+      ctx.fillRect(mx + s.x * sc - 1.5, my + s.y * sc - 1.5, 3, 3);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+//  CAMERA
+// ─────────────────────────────────────────────
+function updateCamera(dt) {
+  const tx = player.x - canvas.width  / 2;
+  const ty = player.y - canvas.height / 2;
+  camera.x += (tx - camera.x) * Math.min(1, dt * 6);
+  camera.y += (ty - camera.y) * Math.min(1, dt * 6);
+  camera.x  = Math.max(0, Math.min(WW - canvas.width,  camera.x));
+  camera.y  = Math.max(0, Math.min(WH - canvas.height, camera.y));
+}
+
+// ─────────────────────────────────────────────
+//  GAME LOOP
+// ─────────────────────────────────────────────
+let lastTs = 0;
+
+function gameLoop(ts) {
+  requestAnimationFrame(gameLoop);
+
+  const dt = Math.min((ts - lastTs) / 1000, 0.05);
+  lastTs = ts;
+
+  if (canvas.width  !== window.innerWidth)  canvas.width  = window.innerWidth;
+  if (canvas.height !== window.innerHeight) canvas.height = window.innerHeight;
+
+  if (!gameRunning) return;
+
+  // Player respawn
+  if (!player.alive) {
+    respawnTimer -= dt;
+    if (respawnTimer <= 0) {
+      const fp = planets.find(p => p.owner === 'player');
+      if (fp) {
+        player.x  = fp.x; player.y  = fp.y - fp.r - 20;
+        player.vx = 0;    player.vy = -60;
+        player.hp = PLAYER_HP;
+        player.alive = true;
+      } else if (!gameOver) {
+        gameOver = 'lose';
+        document.getElementById('loseScreen').classList.add('active');
+      }
+    }
+  }
+
+  if (!gameOver) {
+    for (const p of planets)    p.update(dt);
+    for (const s of ships)      s.update(dt);
+    for (const b of bullets)    b.update(dt);
+    for (const p of particles)  p.update(dt);
+
+    bullets   = bullets.filter(b => b.alive);
+    ships     = ships.filter(s => s.alive || s.isPlayer);
+    particles = particles.filter(p => p.alive);
+
+    updateCamera(dt);
+    if (shakeTimer > 0) shakeTimer -= dt;
+  }
+
+  // ── Draw ──────────────────────────────────
+  ctx.fillStyle = '#000814';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const sx = shakeTimer > 0 ? (Math.random() - 0.5) * shakeAmt * 2 : 0;
+  const sy = shakeTimer > 0 ? (Math.random() - 0.5) * shakeAmt * 2 : 0;
+
+  ctx.save();
+  ctx.translate(-camera.x + sx, -camera.y + sy);
+
+  drawStars();
+  for (const p of planets)   p.draw();
+  for (const b of bullets)   b.draw();
+  for (const pt of particles) pt.draw();
+  for (const s of ships)     s.draw();
+
+  // Player HP on ship
+  if (player.alive) {
+    const bw = 44, bh = 4;
+    const bx = player.x - bw / 2, by = player.y - 18;
+    ctx.fillStyle = '#333'; ctx.fillRect(bx, by, bw, bh);
+    ctx.fillStyle = '#4e9'; ctx.fillRect(bx, by, bw * (player.hp / player.maxHp), bh);
+  }
+
+  ctx.restore();
+
+  drawHUD();
+}
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+function initGame() {
+  gameRunning  = true;
+  gameOver     = null;
+  respawnTimer = 0;
+  shakeTimer   = 0;
+  shakeAmt     = 0;
+
+  planets   = PLANET_DEFS.map(d => new Planet({ ...d }));
+  ships     = [];
+  bullets   = [];
+  particles = [];
+
+  const sp = planets[0]; // player start planet
+  player = new Ship(sp.x, sp.y - sp.r - 26, 0, -70, 'player', true);
+  ships.push(player);
+
+  const ep = planets[1]; // enemy start planet
+  ships.push(new Ship(ep.x, ep.y + ep.r + 26, 0, 70, 'enemy', false));
+
+  camera.x = player.x - canvas.width  / 2;
+  camera.y = player.y - canvas.height / 2;
+}
+
+// ─────────────────────────────────────────────
+//  INPUT
+// ─────────────────────────────────────────────
+window.addEventListener('keydown', e => {
+  keys[e.key.toLowerCase()] = true;
+  if (['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()))
+    e.preventDefault();
+});
+window.addEventListener('keyup',   e => { keys[e.key.toLowerCase()] = false; });
+
+window.addEventListener('mousemove', e => {
+  mouseWorld.x = e.clientX + camera.x;
+  mouseWorld.y = e.clientY + camera.y;
+});
+window.addEventListener('mousedown', e => { if (e.button === 0) mouseDown = true;  });
+window.addEventListener('mouseup',   e => { if (e.button === 0) mouseDown = false; });
+window.addEventListener('contextmenu', e => e.preventDefault());
+
+// ─────────────────────────────────────────────
+//  BUTTONS
+// ─────────────────────────────────────────────
+document.getElementById('startBtn').addEventListener('click', () => {
+  resetScreens();
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  initGame();
+});
+document.getElementById('winBtn').addEventListener('click',  () => { resetScreens(); initGame(); });
+document.getElementById('loseBtn').addEventListener('click', () => { resetScreens(); initGame(); });
+
+// ─────────────────────────────────────────────
+//  BOOTSTRAP
+// ─────────────────────────────────────────────
+canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight;
+requestAnimationFrame(ts => { lastTs = ts; requestAnimationFrame(gameLoop); });
+</script>
+</body>
+</html>

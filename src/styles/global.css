@@ -10,24 +10,45 @@
   --color-accent-light: #3b82f6;
   --color-accent-subtle: rgba(37, 99, 235, 0.07);
 
-  /* Neutral palette */
+  /* Neutral palette — Light */
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f8fafc;
   --color-bg-card: #f1f5f9;
   --color-bg-card-hover: #e2e8f0;
 
-  /* Text hierarchy */
+  /* Text hierarchy — Light */
   --color-text-primary: #0f172a;
   --color-text-secondary: #334155;
   --color-text-muted: #64748b;
 
-  /* Borders */
+  /* Borders — Light */
   --color-border-default: #e2e8f0;
   --color-border-subtle: #f1f5f9;
 
   /* Fonts */
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ========================================
+   Dark Theme
+   ======================================== */
+.dark {
+  --color-accent: #3b82f6;
+  --color-accent-light: #60a5fa;
+  --color-accent-subtle: rgba(59, 130, 246, 0.1);
+
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-card: #1e293b;
+  --color-bg-card-hover: #334155;
+
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+
+  --color-border-default: #334155;
+  --color-border-subtle: #1e293b;
 }
 
 /* ========================================

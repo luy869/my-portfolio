@@ -1,42 +1,28 @@
 ---
 title: "自律型Discord Bot「Athena」"
-description: "ローカルLLMを活用した日韓翻訳・タスク自動化Bot。Python + Node.jsのマルチランタイム構成で、Discordサーバー上にAI機能を統合。"
-tags: ["Python", "Node.js", "Local LLM", "Discord.js", "Ollama"]
+description: "ローカルLLMと画像生成AIを完全にローカル環境で動かすDiscord Bot。Flux.1 schnellによる画像生成とGemma 3によるチャット・翻訳機能を搭載。"
+tags: ["Python", "PyTorch", "Flux.1", "Ollama", "Docker", "Discord.js"]
 order: 1
 featured: true
-github: "https://github.com/luy869/[TODO: リポジトリ名]"
 ---
 
-## 背景・動機
+## 概要
 
-[TODO: なぜこのBotを作ろうと思ったか。どんな不便・課題があったか。
-例: 「韓国語話者の友人が多いDiscordサーバーで言語の壁があり、都度翻訳するのが手間だった」など]
+自宅の自作PC環境を活かし、完全にローカルで動くLLM・画像生成Discord Botを開発。外部APIに依存せず、Ollama（Gemma 3）によるチャット・翻訳機能と、Flux.1 schnellによる画像生成機能をDiscordサーバー上で利用できます。
 
-## 技術的な課題
+## 技術スタック
 
-[TODO: 開発中に直面した具体的な問題を箇条書きで。
-例:
-- OllamaのストリーミングレスポンスをDiscord.jsのメッセージ更新に合わせるタイミング制御
-- 日韓翻訳の精度が文脈によってブレる問題
-- Pythonサービス ↔ Node.jsプロセス間の通信設計]
+- **LLM推論**: Ollama（Gemma 3）
+- **画像生成**: Flux.1 schnell + PyTorch
+- **Bot基盤**: Python + Discord.js（Node.js）
+- **環境管理**: Docker
 
-## 技術選定の理由
+## 技術的な課題と解決
 
-**ローカルLLMを選んだ理由:**
-[TODO: OpenAI APIではなくローカルLLM（Ollama）を使った理由。コスト・プライバシー・レイテンシのどれが主な動機か。代替案と比較した判断を書く]
+- **画像生成モデルの多大なメモリ使用量**: 量子化・CPUオフロード・モデル選定を組み合わせてVRAM消費を抑制
+- **画像モデルのコンポーネント配置順序**: VAEのみを処理の中盤でCPUへ配置し、GPUメモリの使用量を最適化
 
-**Python + Node.jsの二重構成を採った理由:**
-[TODO: なぜ1言語に統一しなかったか。Pythonが得意な処理とNode.jsが得意な処理を分けた設計判断を書く]
+## 学んだこと
 
-## 実装のポイント
-
-[TODO: 特に工夫した点、詰まった点と解決方法を具体的に。
-例:
-- タスクキューの実装: [どう実装したか]
-- 翻訳精度の改善: [プロンプトをどう工夫したか]
-- エラー時のフォールバック: [どう処理したか]]
-
-## 結果・現在の状況
-
-[TODO: 実際に運用してどうなったか。使ってみて気づいたこと、改善したいこと。
-定量的な成果があれば（メッセージ数/日、レスポンス速度など）書く]
+- メモリ問題は「使用量の削減」だけでなく「コンポーネントの配置」でも解消できること
+- Dockerによる再現性のある環境管理の実践
