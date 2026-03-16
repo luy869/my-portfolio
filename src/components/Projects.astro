@@ -7,7 +7,7 @@ const allProjects = await getCollection("projects");
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
 ---
 
-<section id="projects" class="scroll-mt-24 py-14">
+<section id="projects" data-fade class="scroll-mt-24 py-16">
   <div class="mx-auto max-w-6xl px-8">
     <SectionHeading title="Projects" />
 

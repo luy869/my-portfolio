@@ -2,36 +2,40 @@
 import { profile, socialLinks } from "../data/site";
 ---
 
-<section class="flex min-h-[80vh] items-center pt-24">
-  <div class="mx-auto w-full max-w-6xl px-8">
-    <div class="grid items-center gap-12 lg:grid-cols-2">
+<section class="overflow-hidden pb-16 pt-32">
+  <div class="mx-auto max-w-6xl px-8">
+    <div class="flex flex-col items-center gap-10 md:flex-row md:items-start md:gap-16">
 
-      {/* 左カラム: テキスト */}
-      <div>
-        <p class="mb-4 text-sm font-medium text-accent">{profile.status}</p>
+      {/* Text */}
+      <div class="flex-1 text-center md:text-left">
+        <p class="mb-4">
+          <span class="inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent">
+            {profile.status}
+          </span>
+        </p>
 
-        <h1 class="mb-5 text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
+        <h1 class="mb-4 text-4xl font-bold tracking-tight text-text-primary sm:text-5xl">
           {profile.name}
         </h1>
 
-        <p class="mb-4 text-lg leading-relaxed text-text-secondary">
+        <p class="mb-3 text-lg leading-relaxed text-text-secondary">
           {profile.catchphrase}
         </p>
 
-        <p class="mb-10 text-sm leading-relaxed text-text-muted">
+        <p class="mx-auto mb-8 max-w-lg text-sm leading-relaxed text-text-muted md:mx-0 md:max-w-none">
           {profile.bio}
         </p>
 
-        <div class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap justify-center gap-3 md:justify-start">
           <a
             href="#projects"
-            class="inline-flex items-center rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
+            class="inline-flex items-center rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md hover:brightness-110"
           >
             Projects
           </a>
           <a
             href="#about"
-            class="inline-flex items-center rounded-md border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-card"
+            class="inline-flex items-center rounded-lg border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-secondary"
           >
             About
           </a>
@@ -40,7 +44,7 @@ import { profile, socialLinks } from "../data/site";
               href={link.url}
               target="_blank"
               rel="noopener"
-              class="inline-flex items-center rounded-md border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-card"
+              class="inline-flex items-center rounded-lg border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-secondary"
             >
               {link.label}
             </a>
@@ -48,15 +52,15 @@ import { profile, socialLinks } from "../data/site";
         </div>
       </div>
 
-      {/* 右カラム: 写真（public/hero.jpg を配置してください） */}
-      <div class="hidden lg:flex lg:justify-end">
-        <div class="relative w-full max-w-md">
+      {/* Photo */}
+      <div class="shrink-0" id="hero-photo-wrapper">
+        <div class="relative">
+          <div class="absolute -inset-4 rounded-3xl bg-gradient-to-br from-accent/20 via-accent/5 to-transparent blur-2xl" aria-hidden="true" />
           <img
             src="/hero.jpg"
-            alt=""
-            class="w-full rounded-2xl border border-border-default object-cover shadow-sm"
-            style="aspect-ratio: 4/3;"
-            onerror="this.parentElement.style.display='none'"
+            alt={profile.name}
+            class="relative h-44 w-44 rounded-2xl object-cover shadow-lg ring-1 ring-border-default sm:h-56 sm:w-56 md:h-72 md:w-72"
+            onerror="document.getElementById('hero-photo-wrapper').style.display='none'"
           />
         </div>
       </div>

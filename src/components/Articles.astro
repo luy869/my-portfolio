@@ -24,7 +24,7 @@ function formatDate(dateStr: string) {
 }
 ---
 
-<section id="articles" class="scroll-mt-24 py-14">
+<section id="articles" data-fade class="scroll-mt-24 py-16">
   <div class="mx-auto max-w-6xl px-8">
     <SectionHeading title="Articles" />
 
@@ -34,13 +34,13 @@ function formatDate(dateStr: string) {
           href={`https://zenn.dev/luy849/articles/${article.slug}`}
           target="_blank"
           rel="noopener"
-          class="flex items-center justify-between rounded-lg border border-border-default bg-bg-secondary p-5 transition-colors hover:bg-bg-card"
+          class="flex flex-col gap-2 rounded-xl border border-border-default border-l-2 border-l-transparent bg-bg-secondary p-5 transition-all hover:border-l-accent hover:bg-bg-card sm:flex-row sm:items-center sm:justify-between"
         >
           <div class="flex items-center gap-4 min-w-0">
             <span class="shrink-0 text-2xl" aria-hidden="true">{article.emoji}</span>
-            <p class="truncate text-sm font-medium text-text-primary">{article.title}</p>
+            <p class="line-clamp-2 text-sm font-medium text-text-primary">{article.title}</p>
           </div>
-          <div class="ml-4 flex shrink-0 items-center gap-4 text-xs text-text-muted">
+          <div class="flex shrink-0 items-center gap-4 pl-10 text-xs text-text-muted sm:ml-4 sm:pl-0">
             <span class="hidden sm:block">{formatDate(article.published_at)}</span>
             <span class="flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
@@ -58,9 +58,9 @@ function formatDate(dateStr: string) {
         href="https://zenn.dev/luy849"
         target="_blank"
         rel="noopener"
-        class="text-sm text-text-muted transition-colors hover:text-text-primary"
+        class="text-sm text-accent transition-colors hover:text-accent-light"
       >
-        Zenn でもっと読む →
+        Zenn でもっと読む &rarr;
       </a>
     </div>
   </div>
