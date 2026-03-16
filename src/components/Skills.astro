@@ -4,14 +4,14 @@ import SkillBadge from "./ui/SkillBadge.astro";
 import { skills } from "../data/site";
 ---
 
-<section id="skills" class="scroll-mt-24 py-14">
+<section id="skills" data-fade class="scroll-mt-24 bg-bg-secondary py-16">
   <div class="mx-auto max-w-6xl px-8">
     <SectionHeading title="Skills" />
 
-    <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+    <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
       {
         skills.map((category) => (
-          <div class="rounded-lg border border-border-default bg-bg-secondary p-5">
+          <div>
             <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-accent">
               {category.category}
             </h3>
