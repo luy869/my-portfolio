@@ -22,3 +22,11 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# widget build artifacts
+widget/node_modules/
+widget/dist/
+widget/package-lock.json
+
+# worker cache and secrets
+worker/.wrangler/
