@@ -27,9 +27,14 @@ export default {
     // /api/* → nginx の /api/* ルートに転送（プレフィックスを保持）
     const backendUrl = env.BACKEND_URL + url.pathname + url.search;
 
+    const backendHeaders = new Headers(request.headers);
+    if (env.API_KEY) {
+      backendHeaders.set("X-API-Key", env.API_KEY);
+    }
+
     const backendRequest = new Request(backendUrl, {
       method: request.method,
-      headers: request.headers,
+      headers: backendHeaders,
       body: request.body,
     });
 

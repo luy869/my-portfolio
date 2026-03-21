@@ -2,16 +2,6 @@ import { useState, useRef, useEffect } from "react";
 
 const API_URL = "https://luy869.net/api/chat/";
 const COLLECTION_NAME = "portfolio";
-const SYSTEM_PROMPT = `あなたは「ゆう」のポートフォリオアシスタントです。
-訪問者からの質問に対して、提供されたプロフィール情報をもとにゆうについて丁寧に答えてください。
-
-## 回答のルール
-
-- 提供された情報に基づいて正確に答える
-- 情報にない内容は「その詳細は把握していません」と正直に伝える
-- 日本語で質問されたら日本語で、英語なら英語で答える
-- 簡潔かつ具体的に答える（長すぎない）
-- 技術的な質問には具体的なプロジェクト名やエピソードを交えて説明する`;
 
 interface Message {
   role: "user" | "assistant";
@@ -59,7 +49,6 @@ export default function ChatWidget() {
           question,
           collection_name: COLLECTION_NAME,
           stream: true,
-          system_prompt: SYSTEM_PROMPT,
         }),
       });
 
@@ -121,7 +110,7 @@ export default function ChatWidget() {
           <div className="flex items-center justify-between px-4 py-3 bg-gray-900 text-white">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-400" />
-              <span className="font-semibold text-sm">Yu's Portfolio Bot</span>
+              <span className="font-semibold text-sm">チャットボット</span>
             </div>
             <button
               onClick={() => setOpen(false)}
@@ -139,11 +128,10 @@ export default function ChatWidget() {
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] px-3 py-2 rounded-xl text-sm whitespace-pre-wrap leading-relaxed ${
-                    msg.role === "user"
+                  className={`max-w-[85%] px-3 py-2 rounded-xl text-sm whitespace-pre-wrap leading-relaxed ${msg.role === "user"
                       ? "bg-gray-900 text-white rounded-br-sm"
                       : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm"
-                  }`}
+                    }`}
                 >
                   {msg.content}
                   {msg.role === "assistant" && loading && i === messages.length - 1 && msg.content === "" && (
