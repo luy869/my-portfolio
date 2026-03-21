@@ -34,9 +34,13 @@ const { title, description = "情報系エンジニアのポートフォリオ" 
     />
 
     <title>{title}</title>
+    <link rel="stylesheet" href="/chat-widget.css" />
   </head>
   <body>
     <slot />
+
+    <div id="chat-widget-root"></div>
+    <script src="/chat-widget.iife.js" is:inline></script>
 
     <script>
       const observer = new IntersectionObserver(
