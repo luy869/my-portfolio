@@ -2,69 +2,486 @@
 import { profile, socialLinks } from "../data/site";
 ---
 
-<section class="overflow-hidden pb-16 pt-32">
-  <div class="mx-auto max-w-6xl px-8">
-    <div class="flex flex-col items-center gap-10 md:flex-row md:items-start md:gap-16">
+<section id="hero" class="hero">
+  <!-- パーティクル背景 -->
+  <div class="particles" aria-hidden="true">
+    {Array.from({ length: 20 }).map((_, i) => (
+      <div class="particle" style={`--delay: ${(i * 0.7) % 7}s; --duration: ${6 + (i % 5)}s; --x: ${(i * 37 + 13) % 95}%`}></div>
+    ))}
+  </div>
 
-      {/* Text */}
-      <div class="flex-1 text-center md:text-left">
-        <p class="mb-4">
-          <span class="inline-block rounded-full bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent">
-            {profile.status}
-          </span>
-        </p>
+  <!-- コーナーライン装飾 -->
+  <div class="corner-deco corner-deco--tl" aria-hidden="true">
+    <span class="line-h"></span>
+    <span class="line-v"></span>
+  </div>
+  <div class="corner-deco corner-deco--br" aria-hidden="true">
+    <span class="line-h"></span>
+    <span class="line-v"></span>
+  </div>
 
-        <h1 class="mb-4 text-4xl font-bold tracking-tight text-text-primary sm:text-5xl">
-          {profile.name}
-        </h1>
+  <div class="hero-inner">
+    <!-- ステータスバッジ -->
+    <div class="hero-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="status-text">{profile.status}</span>
+    </div>
 
-        <p class="mb-3 text-lg leading-relaxed text-text-secondary">
-          {profile.catchphrase}
-        </p>
-
-        <p class="mx-auto mb-8 max-w-lg text-sm leading-relaxed text-text-muted md:mx-0 md:max-w-none">
-          {profile.bio}
-        </p>
-
-        <div class="flex flex-wrap justify-center gap-3 md:justify-start">
-          <a
-            href="#projects"
-            class="inline-flex items-center rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md hover:brightness-110"
-          >
-            Projects
-          </a>
-          <a
-            href="#about"
-            class="inline-flex items-center rounded-lg border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-secondary"
-          >
-            About
-          </a>
-          {socialLinks.map((link) => (
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener"
-              class="inline-flex items-center rounded-lg border border-border-default px-5 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-secondary"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
+    <!-- メインコピー（タイピングアニメーション） -->
+    <div class="hero-title-block">
+      <div class="hero-greeting">
+        <span class="terminal-prefix">$&nbsp;</span><span class="greeting-cmd">whoami</span>
       </div>
+      <h1 class="hero-name">
+        <span id="typing-name"></span><span class="cursor-blink" aria-hidden="true"></span>
+      </h1>
+      <p class="hero-catch" id="typing-catch"></p>
+    </div>
 
-      {/* Photo */}
-      <div class="shrink-0" id="hero-photo-wrapper">
-        <div class="relative">
-          <div class="absolute -inset-4 rounded-3xl bg-gradient-to-br from-accent/20 via-accent/5 to-transparent blur-2xl" aria-hidden="true" />
-          <img
-            src="/hero.jpg"
-            alt={profile.name}
-            class="relative h-44 w-44 rounded-2xl object-cover shadow-lg ring-1 ring-border-default sm:h-56 sm:w-56 md:h-72 md:w-72"
-            onerror="document.getElementById('hero-photo-wrapper').style.display='none'"
-          />
-        </div>
+    <!-- bio -->
+    <p class="hero-bio">{profile.bio}</p>
+
+    <!-- CTA -->
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary neon-pulse">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        Projects
+      </a>
+      <a href="#about" class="btn-outline">About</a>
+      {socialLinks.map((link) => (
+        <a href={link.url} target="_blank" rel="noopener" class="btn-ghost">
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- スクロールインジケーター -->
+    <div class="scroll-indicator" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span class="scroll-label">scroll</span>
+    </div>
+  </div>
+
+  <!-- 写真（六角形） -->
+  <div class="hero-photo-col" id="hero-photo-wrapper">
+    <div class="photo-frame">
+      <div class="photo-hex-wrap">
+        <img
+          src="/hero.jpg"
+          alt={profile.name}
+          class="photo-hex"
+          onerror="document.getElementById('hero-photo-wrapper').style.display='none'"
+        />
       </div>
-
+      <div class="photo-glow" aria-hidden="true"></div>
+      <!-- 装飾ライン -->
+      <div class="photo-decoration" aria-hidden="true">
+        <span class="deco-line deco-line--1"></span>
+        <span class="deco-line deco-line--2"></span>
+        <span class="deco-dot"></span>
+      </div>
+    </div>
+    <div class="photo-label">
+      <span class="terminal-prefix">id:</span>
+      <span class="label-handle">{profile.handle}</span>
     </div>
   </div>
 </section>
+
+<script>
+  // タイピングアニメーション
+  async function typeText(el: HTMLElement | null, text: string, delay = 60) {
+    if (!el) return;
+    for (const char of text) {
+      el.textContent += char;
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+
+  (async () => {
+    await new Promise(r => setTimeout(r, 400));
+    const nameEl  = document.getElementById("typing-name");
+    const catchEl = document.getElementById("typing-catch");
+    await typeText(nameEl, "ゆう / luy869", 70);
+    await new Promise(r => setTimeout(r, 200));
+    await typeText(catchEl, "高度な技術を誰もが使いやすい形にするエンジニア", 45);
+  })();
+</script>
+
+<style>
+  /* ========== ヒーローセクション ========== */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+    padding: 6rem 4rem 4rem;
+    overflow: hidden;
+  }
+
+  @media (max-width: 1024px) {
+    .hero {
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 1.5rem 3rem;
+      gap: 3rem;
+      text-align: center;
+    }
+  }
+
+  /* ========== パーティクル ========== */
+  .particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    bottom: -10px;
+    left: var(--x);
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to top, var(--color-neon-cyan), transparent);
+    opacity: 0;
+    animation: particle-drift var(--duration) ease-in var(--delay) infinite;
+  }
+
+  /* ========== コーナーデコレーション ========== */
+  .corner-deco {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .corner-deco--tl {
+    top: 2rem; left: 2rem;
+  }
+
+  .corner-deco--br {
+    bottom: 2rem; right: 2rem;
+    transform: rotate(180deg);
+  }
+
+  .line-h {
+    position: absolute;
+    top: 0; left: 0;
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: rgba(0, 255, 213, 0.4);
+  }
+
+  .line-v {
+    position: absolute;
+    top: 0; left: 0;
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: rgba(0, 255, 213, 0.4);
+  }
+
+  /* ========== ヒーローコンテンツ ========== */
+  .hero-inner {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* ステータスバッジ */
+  .hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid rgba(0, 255, 213, 0.2);
+    border-radius: 2px;
+    background: rgba(0, 255, 213, 0.04);
+    width: fit-content;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-status { margin-inline: auto; }
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-neon-cyan);
+    box-shadow: 0 0 6px var(--color-neon-cyan-glow);
+    animation: neon-pulse 2s ease-in-out infinite;
+  }
+
+  .status-text {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 340px;
+  }
+
+  /* グリーティング */
+  .hero-greeting {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: -1rem;
+  }
+
+  .greeting-cmd {
+    color: var(--color-text-muted);
+    opacity: 0.7;
+  }
+
+  /* 名前 */
+  .hero-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hero-name {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    min-height: 1.2em;
+  }
+
+  /* カーソルは cursor-blink クラスで制御（global.css） */
+
+  .hero-catch {
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 12px rgba(0, 255, 213, 0.4);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    min-height: 1.5em;
+  }
+
+  /* bio */
+  .hero-bio {
+    font-size: 0.875rem;
+    line-height: 1.8;
+    color: var(--color-text-muted);
+    max-width: 500px;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-bio { margin-inline: auto; }
+  }
+
+  /* CTA ボタン群 */
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-cta { justify-content: center; }
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.25rem;
+    background: var(--color-neon-cyan);
+    color: var(--color-bg-void);
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 2px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s, transform 0.2s;
+    font-family: var(--font-mono);
+  }
+
+  .btn-primary:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.65rem 1.25rem;
+    border: 1px solid rgba(0, 255, 213, 0.3);
+    color: var(--color-neon-cyan);
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    border-radius: 2px;
+    text-decoration: none;
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .btn-outline:hover {
+    background: rgba(0, 255, 213, 0.08);
+    box-shadow: 0 0 12px rgba(0, 255, 213, 0.2);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.65rem 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    border-radius: 2px;
+    text-decoration: none;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.2s ease;
+  }
+
+  .btn-ghost:hover {
+    color: var(--color-text-secondary);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  /* スクロールインジケーター */
+  .scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 1024px) {
+    .scroll-indicator { display: none; }
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--color-neon-cyan), transparent);
+    animation: float 2s ease-in-out infinite;
+  }
+
+  .scroll-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-neon-cyan);
+    letter-spacing: 0.15em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+  }
+
+  /* ========== 写真カラム ========== */
+  .hero-photo-col {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .photo-frame {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-hex-wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  .photo-hex {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    filter: saturate(0.8) contrast(1.1);
+    transition: filter 0.4s ease;
+  }
+
+  @media (max-width: 1024px) {
+    .photo-hex { width: 160px; height: 160px; }
+  }
+
+  .photo-hex:hover {
+    filter: saturate(1) contrast(1);
+  }
+
+  .photo-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(0, 255, 213, 0.15) 0%,
+      transparent 70%
+    );
+    filter: blur(20px);
+    pointer-events: none;
+  }
+
+  /* 装飾ライン */
+  .photo-decoration {
+    position: absolute;
+    inset: -30px;
+    pointer-events: none;
+  }
+
+  .deco-line {
+    position: absolute;
+    background: rgba(0, 255, 213, 0.3);
+  }
+
+  .deco-line--1 {
+    top: 10px; right: 0;
+    width: 1px; height: 60px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .deco-line--2 {
+    bottom: 20px; left: 0;
+    width: 40px; height: 1px;
+    animation: float 3s ease-in-out 1s infinite;
+  }
+
+  .deco-dot {
+    position: absolute;
+    top: 10px; right: -3px;
+    width: 5px; height: 5px;
+    border-radius: 9999px;
+    background: var(--color-neon-cyan);
+    box-shadow: 0 0 8px var(--color-neon-cyan-glow);
+  }
+
+  /* ラベル */
+  .photo-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .label-handle {
+    color: var(--color-neon-cyan);
+    opacity: 0.8;
+  }
+</style>
