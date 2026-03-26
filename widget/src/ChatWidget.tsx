@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 
 const API_URL = "https://luy869.net/api/chat/";
-const COLLECTION_NAME = "portfolio";
+const COLLECTION_NAME = "default";
 
 interface Message {
   role: "user" | "assistant";
