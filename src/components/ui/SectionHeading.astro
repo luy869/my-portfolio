@@ -6,6 +6,50 @@ export interface Props {
 const { id, title } = Astro.props;
 ---
 
-<h2 id={id} class="mb-10 text-lg font-semibold text-text-primary">
-  {title}
-</h2>
+<div class="section-header" {id && { id }}>
+  <div class="prefix-line" aria-hidden="true">
+    <span class="terminal-prefix">$&nbsp;</span><span class="cmd-text">display_section</span>
+  </div>
+  <h2 class="glitch" data-text={title}>{title}</h2>
+  <div class="heading-line" aria-hidden="true"></div>
+</div>
+
+<style>
+  .section-header {
+    margin-bottom: 3rem;
+  }
+
+  .prefix-line {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .cmd-text {
+    color: var(--color-text-muted);
+    opacity: 0.7;
+  }
+
+  h2 {
+    font-family: var(--font-mono);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .heading-line {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      var(--color-neon-cyan) 0%,
+      rgba(0, 255, 213, 0.2) 40%,
+      transparent 100%
+    );
+    box-shadow: 0 0 8px rgba(0, 255, 213, 0.3);
+  }
+</style>

@@ -1,23 +1,189 @@
 ---
 import { profile, socialLinks } from "../data/site";
+const year = new Date().getFullYear();
 ---
 
-<footer class="mt-auto border-t border-border-subtle">
-  <div class="mx-auto flex max-w-6xl flex-col items-center gap-3 px-8 py-10 sm:flex-row sm:justify-between">
-    <p class="text-xs text-text-muted">
-      &copy; {new Date().getFullYear()} {profile.name}
-    </p>
-    <div class="flex items-center gap-4">
-      {socialLinks.map((link) => (
-        <a
-          href={link.url}
-          target="_blank"
-          rel="noopener"
-          class="text-xs text-text-muted transition-colors hover:text-accent"
-        >
-          {link.label}
-        </a>
-      ))}
+<footer class="footer">
+  <div class="footer-inner section-container">
+    <!-- ターミナル上線 -->
+    <div class="footer-topbar" aria-hidden="true">
+      <span class="topbar-line"></span>
+      <span class="topbar-label">EOF</span>
+      <span class="topbar-line"></span>
+    </div>
+
+    <div class="footer-grid">
+      <!-- 左: ターミナル出力 -->
+      <div class="footer-terminal">
+        <div class="ft-line">
+          <span class="ft-prefix">$</span>
+          <span class="ft-cmd">./portfolio</span>
+          <span class="ft-arg">--user={profile.handle}</span>
+        </div>
+        <div class="ft-output">
+          <span class="ft-ok">[  OK  ]</span>
+          <span class="ft-msg">Process exited successfully.</span>
+        </div>
+        <div class="ft-prompt">
+          <span class="ft-prefix">$</span>
+          <span class="cursor-blink" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <!-- 右: ソーシャル + コピーライト -->
+      <div class="footer-right">
+        <div class="footer-social">
+          {socialLinks.map((link) => (
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener"
+              class="social-link"
+            >
+              <span class="social-arrow" aria-hidden="true">↗</span>
+              {link.label}
+            </a>
+          ))}
+        </div>
+        <p class="footer-copy">
+          &copy; {year} <span class="copy-name">{profile.name}</span>
+        </p>
+      </div>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer {
+    margin-top: auto;
+    padding-block: 2.5rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    position: relative;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* ========== 上部ライン ========== */
+  .footer-topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .topbar-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 213, 0.15));
+  }
+
+  .topbar-line:last-child {
+    background: linear-gradient(90deg, rgba(0, 255, 213, 0.15), transparent);
+  }
+
+  .topbar-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.1em;
+    opacity: 0.4;
+  }
+
+  /* ========== グリッド ========== */
+  .footer-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  @media (min-width: 640px) {
+    .footer-grid {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  /* ========== ターミナル出力 ========== */
+  .footer-terminal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .ft-line,
+  .ft-output,
+  .ft-prompt {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .ft-prefix {
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 6px rgba(0, 255, 213, 0.4);
+  }
+
+  .ft-cmd  { color: #a78bfa; }
+  .ft-arg  { color: var(--color-text-muted); font-size: 0.65rem; }
+  .ft-ok   { color: #28c840; font-size: 0.7rem; }
+  .ft-msg  { color: var(--color-text-muted); font-size: 0.7rem; }
+
+  /* ========== 右側 ========== */
+  .footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .footer-right { align-items: flex-end; }
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s, text-shadow 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .social-link:hover {
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
+  }
+
+  .social-arrow {
+    font-size: 0.65rem;
+    opacity: 0.6;
+  }
+
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  .copy-name {
+    color: var(--color-neon-cyan);
+    opacity: 0.7;
+  }
+</style>

@@ -3,27 +3,209 @@ import SectionHeading from "./ui/SectionHeading.astro";
 import { about } from "../data/site";
 ---
 
-<section id="about" data-fade class="scroll-mt-24 py-16">
-  <div class="mx-auto max-w-6xl px-8">
+<section id="about" data-fade class="about-section scroll-mt-24">
+  <div class="section-container">
     <SectionHeading title="About" />
 
-    <div class="grid items-start gap-10 lg:grid-cols-2">
-      <div class="space-y-4">
-        {about.paragraphs.map((p) => (
-          <p class="text-sm leading-relaxed text-text-secondary">{p}</p>
-        ))}
+    <div class="about-grid">
+      <!-- ターミナル風テキストボックス -->
+      <div class="terminal-box">
+        <div class="terminal-titlebar">
+          <div class="terminal-dots" aria-hidden="true">
+            <span class="tdot tdot--red"></span>
+            <span class="tdot tdot--yellow"></span>
+            <span class="tdot tdot--green"></span>
+          </div>
+          <span class="terminal-title">about.txt</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line">
+            <span class="t-prefix">$</span>
+            <span class="t-cmd">cat</span>
+            <span class="t-arg">about.txt</span>
+          </div>
+          <div class="terminal-output">
+            {about.paragraphs.map((p, i) => (
+              <p class={`t-line ${i === 0 ? "" : "t-line--gap"}`}>{p}</p>
+            ))}
+          </div>
+          <div class="terminal-line terminal-line--bottom">
+            <span class="t-prefix">$</span>
+            <span class="cursor-blink" aria-hidden="true"></span>
+          </div>
+        </div>
       </div>
 
-      <div class="space-y-3">
-        {about.highlights.map((item) => (
-          <div class="rounded-lg border-l-2 border-accent bg-bg-secondary p-4">
-            <p class="mb-1 text-xs font-semibold tracking-wider text-accent">
+      <!-- ハイライトカード群 -->
+      <div class="highlights">
+        {about.highlights.map((item, i) => (
+          <div class="highlight-card" style={`--delay: ${i * 0.08}s`}>
+            <div class="highlight-key">
+              <span class="key-bracket" aria-hidden="true">[</span>
               {item.label}
-            </p>
-            <p class="text-sm text-text-primary">{item.value}</p>
+              <span class="key-bracket" aria-hidden="true">]</span>
+            </div>
+            <div class="highlight-value">{item.value}</div>
           </div>
         ))}
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .about-section {
+    padding-block: 6rem;
+  }
+
+  .about-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  /* ========== ターミナルボックス ========== */
+  .terminal-box {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    background: var(--color-bg-surface);
+    overflow: hidden;
+  }
+
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    background: var(--color-bg-elevated);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .terminal-dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .tdot {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+  }
+
+  .tdot--red    { background: #ff5f57; }
+  .tdot--yellow { background: #febc2e; }
+  .tdot--green  { background: #28c840; }
+
+  .terminal-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    margin-left: auto;
+    margin-right: auto;
+    letter-spacing: 0.03em;
+  }
+
+  .terminal-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .terminal-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .terminal-line--bottom {
+    margin-top: 0.25rem;
+  }
+
+  .t-prefix {
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
+  }
+
+  .t-cmd { color: #a78bfa; }   /* 紫 */
+  .t-arg { color: #fbbf24; }   /* 黄 */
+
+  .terminal-output {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-left: 1px solid rgba(0, 255, 213, 0.1);
+    padding-left: 1rem;
+    margin-left: 0.2rem;
+  }
+
+  .t-line {
+    font-size: 0.8rem;
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+  }
+
+  .t-line--gap {
+    margin-top: 0.25rem;
+  }
+
+  /* ========== ハイライトカード ========== */
+  .highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .highlight-card {
+    padding: 0.9rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(0, 255, 213, 0.15);
+    border-bottom: 1px solid rgba(0, 255, 213, 0.06);
+    background: linear-gradient(
+      135deg,
+      rgba(0, 255, 213, 0.02) 0%,
+      rgba(20, 24, 40, 0.6) 100%
+    );
+    border-radius: 4px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .highlight-card:hover {
+    border-color: rgba(0, 255, 213, 0.25);
+    background: linear-gradient(
+      135deg,
+      rgba(0, 255, 213, 0.05) 0%,
+      rgba(20, 24, 40, 0.8) 100%
+    );
+  }
+
+  .highlight-key {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-neon-cyan);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+
+  .key-bracket {
+    opacity: 0.5;
+  }
+
+  .highlight-value {
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+</style>

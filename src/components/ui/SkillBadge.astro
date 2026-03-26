@@ -5,6 +5,35 @@ export interface Props {
 const { text } = Astro.props;
 ---
 
-<span class="inline-flex items-center rounded-full border border-border-default px-3 py-1 font-mono text-xs text-text-secondary">
-  {text}
+<span class="skill-tag">
+  <span class="tag-hash" aria-hidden="true">#</span>{text}
 </span>
+
+<style>
+  .skill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15em;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid rgba(0, 255, 213, 0.2);
+    border-radius: 2px;
+    color: var(--color-text-secondary);
+    background: rgba(0, 255, 213, 0.03);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .skill-tag:hover {
+    border-color: rgba(0, 255, 213, 0.5);
+    color: var(--color-neon-cyan);
+    background: rgba(0, 255, 213, 0.08);
+    box-shadow: 0 0 8px rgba(0, 255, 213, 0.2);
+  }
+
+  .tag-hash {
+    color: var(--color-neon-cyan);
+    opacity: 0.7;
+  }
+</style>

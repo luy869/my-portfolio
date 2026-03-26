@@ -5,7 +5,7 @@ export interface Props {
   title: string;
   description?: string;
 }
-const { title, description = "情報系エンジニアのポートフォリオ" } = Astro.props;
+const { title, description = "ゆうのポートフォリオサイト。ローカルAI・インフラ構築・Web開発の個人プロジェクトと活動を紹介しています。" } = Astro.props;
 ---
 
 <!doctype html>
@@ -15,8 +15,7 @@ const { title, description = "情報系エンジニアのポートフォリオ" 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0a0e1a" />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -29,7 +28,7 @@ const { title, description = "情報系エンジニアのポートフォリオ" 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
 
@@ -37,12 +36,16 @@ const { title, description = "情報系エンジニアのポートフォリオ" 
     <link rel="stylesheet" href="/chat-widget.css" />
   </head>
   <body>
+    <!-- グリッドオーバーレイ背景 -->
+    <div class="grid-overlay" aria-hidden="true"></div>
+
     <slot />
 
     <div id="chat-widget-root"></div>
     <script src="/chat-widget.iife.js" is:inline></script>
 
     <script>
+      // スクロール連動フェードアニメーション
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -52,7 +55,7 @@ const { title, description = "情報系エンジニアのポートフォリオ" 
             }
           });
         },
-        { threshold: 0.08, rootMargin: "0px 0px -60px 0px" },
+        { threshold: 0.08, rootMargin: "0px 0px -60px 0px" }
       );
       document.querySelectorAll("[data-fade]").forEach((el) => observer.observe(el));
     </script>

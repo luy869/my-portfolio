@@ -1,28 +1,192 @@
 ---
 import SectionHeading from "./ui/SectionHeading.astro";
-import SkillBadge from "./ui/SkillBadge.astro";
 import { skills } from "../data/site";
+
+// カテゴリごとのネオンカラー
+const categoryColors: Record<string, string> = {
+  "Backend / CLI": "cyan",
+  "AI / LLM":     "magenta",
+  "Infrastructure": "yellow",
+  "Frontend / Web": "cyan",
+  "Tools":         "magenta",
+};
 ---
 
-<section id="skills" data-fade class="scroll-mt-24 bg-bg-secondary py-16">
-  <div class="mx-auto max-w-6xl px-8">
+<section id="skills" data-fade class="skills-section scroll-mt-24">
+  <div class="section-container">
     <SectionHeading title="Skills" />
 
-    <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-      {
-        skills.map((category) => (
-          <div>
-            <h3 class="mb-3 text-xs font-semibold uppercase tracking-wider text-accent">
-              {category.category}
-            </h3>
-            <div class="flex flex-wrap gap-1.5">
-              {category.items.map((item) => (
-                <SkillBadge text={item} />
+    <div class="skills-grid">
+      {skills.map((category) => {
+        const color = categoryColors[category.category] ?? "cyan";
+        return (
+          <div class:list={["skill-group", `skill-group--${color}`]}>
+            <div class="group-header">
+              <span class="group-icon" aria-hidden="true">
+                {color === "cyan" ? "▸" : color === "magenta" ? "◈" : "◆"}
+              </span>
+              <h3 class="group-name">{category.category}</h3>
+            </div>
+            <div class="group-bars">
+              {category.items.map((item, i) => (
+                <div class="skill-row">
+                  <span class="skill-name">{item}</span>
+                  <div class="skill-bar-track">
+                    <div
+                      class="skill-bar-fill"
+                      style={`--width: ${70 + (i * 7) % 25}%`}
+                    ></div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
-        ))
-      }
+        );
+      })}
     </div>
   </div>
 </section>
+
+<style>
+  .skills-section {
+    padding-block: 6rem;
+  }
+
+  .skills-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 600px) {
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 960px) {
+    .skills-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ========== スキルグループ ========== */
+  .skill-group {
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    background: var(--color-bg-card);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+  }
+
+  .skill-group::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    transition: opacity 0.3s;
+  }
+
+  .skill-group--cyan::before {
+    background: linear-gradient(90deg, var(--color-neon-cyan), transparent);
+    box-shadow: 0 0 8px rgba(0, 255, 213, 0.3);
+  }
+
+  .skill-group--magenta::before {
+    background: linear-gradient(90deg, var(--color-neon-magenta), transparent);
+    box-shadow: 0 0 8px rgba(255, 0, 170, 0.3);
+  }
+
+  .skill-group--yellow::before {
+    background: linear-gradient(90deg, var(--color-neon-yellow), transparent);
+    box-shadow: 0 0 8px rgba(245, 255, 80, 0.3);
+  }
+
+  .skill-group--cyan:hover {
+    border-color: rgba(0, 255, 213, 0.2);
+  }
+
+  .skill-group--magenta:hover {
+    border-color: rgba(255, 0, 170, 0.2);
+  }
+
+  .skill-group--yellow:hover {
+    border-color: rgba(245, 255, 80, 0.2);
+  }
+
+  /* グループヘッダー */
+  .group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .group-icon {
+    font-size: 0.7rem;
+  }
+
+  .skill-group--cyan .group-icon    { color: var(--color-neon-cyan); }
+  .skill-group--magenta .group-icon { color: var(--color-neon-magenta); }
+  .skill-group--yellow .group-icon  { color: var(--color-neon-yellow); }
+
+  .group-name {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ========== スキルバー ========== */
+  .group-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .skill-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .skill-name {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+  }
+
+  .skill-bar-track {
+    height: 2px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 9999px;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* show クラスが付いたら幅を展開 */
+  .show .skill-bar-fill {
+    width: var(--width);
+  }
+
+  .skill-group--cyan .skill-bar-fill {
+    background: linear-gradient(90deg, var(--color-neon-cyan), rgba(0, 255, 213, 0.5));
+    box-shadow: 0 0 6px rgba(0, 255, 213, 0.4);
+  }
+
+  .skill-group--magenta .skill-bar-fill {
+    background: linear-gradient(90deg, var(--color-neon-magenta), rgba(255, 0, 170, 0.5));
+    box-shadow: 0 0 6px rgba(255, 0, 170, 0.4);
+  }
+
+  .skill-group--yellow .skill-bar-fill {
+    background: linear-gradient(90deg, var(--color-neon-yellow), rgba(245, 255, 80, 0.5));
+    box-shadow: 0 0 6px rgba(245, 255, 80, 0.4);
+  }
+</style>
