@@ -96,4 +96,5 @@ export const about = {
 export const socialLinks = [
     { label: "GitHub", url: "https://github.com/luy869" },
     { label: "Zenn", url: "https://zenn.dev/luy849" },
+    { label: "X (Twitter)", url: "https://x.com/luy869_tech" },
 ] as const;
