@@ -1,96 +1,16 @@
 ---
 import { getCollection } from "astro:content";
-import SectionHeading from "./ui/SectionHeading.astro";
 import ProjectCard from "./ui/ProjectCard.astro";
 
 const allProjects = await getCollection("projects");
 const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
-
-// featured と通常を分ける
-const featuredProjects = sortedProjects.filter((p) => p.data.featured);
-const otherProjects = sortedProjects.filter((p) => !p.data.featured);
 ---
 
-<section id="projects" data-fade class="projects-section scroll-mt-24">
-  <div class="section-container">
-    <SectionHeading title="Projects" />
-
-    <!-- フィーチャードプロジェクト（大き目に表示） -->
-    {featuredProjects.length > 0 && (
-      <div class="featured-grid">
-        {featuredProjects.map((project) => (
-          <ProjectCard
-            slug={project.id}
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            link={project.data.link}
-            github={project.data.github}
-            featured={true}
-          />
-        ))}
-      </div>
-    )}
-
-    <!-- 通常プロジェクト -->
-    {otherProjects.length > 0 && (
-      <div class="projects-grid">
-        {otherProjects.map((project) => (
-          <ProjectCard
-            slug={project.id}
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            link={project.data.link}
-            github={project.data.github}
-          />
-        ))}
-      </div>
-    )}
-  </div>
-</section>
-
-<style>
-  .projects-section {
-    padding-block: 6rem;
-    background: linear-gradient(
-      180deg,
-      var(--color-bg-base) 0%,
-      var(--color-bg-surface) 50%,
-      var(--color-bg-base) 100%
-    );
-  }
-
-  /* featuredプロジェクトは2列・大きめ */
-  .featured-grid {
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: 1fr;
-    margin-bottom: 1.25rem;
-  }
-
-  @media (min-width: 700px) {
-    .featured-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  /* 通常プロジェクトは3列 */
-  .projects-grid {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: 1fr;
-  }
-
-  @media (min-width: 600px) {
-    .projects-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 900px) {
-    .projects-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-</style>
+{sortedProjects.map((project) => (
+  <ProjectCard
+    slug={project.id}
+    title={project.data.title}
+    description={project.data.description}
+    tags={project.data.tags}
+  />
+))}
