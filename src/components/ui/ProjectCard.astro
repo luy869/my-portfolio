@@ -1,238 +1,62 @@
 ---
-import SkillBadge from "./SkillBadge.astro";
+import CyberBentoCard from "./CyberBentoCard.astro";
 
-export interface Props {
+interface Props {
   slug: string;
   title: string;
   description: string;
-  tags: string[];
+  tags?: string[];
   link?: string;
   github?: string;
-  featured?: boolean;
 }
 
-const { slug, title, description, tags, link, github, featured = false } = Astro.props;
+const { slug, title, description, tags = [] } = Astro.props;
+
+// カードの色をランダムっぽくするためタグ文字などの長さに応じて発光色を変える
+const glowColors: ('cyan' | 'magenta' | 'yellow')[] = ['cyan', 'magenta', 'yellow'];
+const glowColor = glowColors[title.length % 3] as 'cyan' | 'magenta' | 'yellow';
 ---
 
-<article class:list={["project-card", { "project-card--featured": featured }]}>
-  <!-- グロウエフェクト（hover時） -->
-  <div class="card-glow" aria-hidden="true"></div>
-
-  <!-- コーナーデコレーション -->
-  <span class="corner corner-tl" aria-hidden="true"></span>
-  <span class="corner corner-br" aria-hidden="true"></span>
-
-  <!-- カードコンテンツ全体をリンクにする透明オーバーレイ -->
-  <a href={`/projects/${slug}`} class="card-link" aria-label={`${title} の詳細を見る`}></a>
-
-  <div class="card-inner">
-    <!-- ヘッダー -->
-    <div class="card-header">
-      <div class="card-title-row">
-        <span class="card-index">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
-          </svg>
-        </span>
-        <h3 class="card-title">{title}</h3>
-      </div>
-
-      <!-- 外部リンクアイコン -->
-      <div class="card-actions">
-        {github && (
-          <a
-            href={github}
-            target="_blank"
-            rel="noopener"
-            aria-label="GitHub"
-            class="action-icon"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 .5C5.6.5.5 5.6.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.5-.3-5.2-1.3-5.2-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5.5 18.3 5.8 18.3 5.8c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.2 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6C20.2 21.4 23.5 17.1 23.5 12 23.5 5.6 18.4.5 12 .5z"/>
-            </svg>
-          </a>
-        )}
-        {link && (
-          <a
-            href={link}
-            target="_blank"
-            rel="noopener"
-            aria-label="外部リンク"
-            class="action-icon"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        )}
-      </div>
-    </div>
-
-    <!-- 説明 -->
-    <p class="card-description">{description}</p>
-
+<CyberBentoCard href={`/projects/${slug}`} glowColor={glowColor} className="flex flex-col justify-between h-full group !p-6 aspect-square sm:aspect-auto sm:min-h-[280px]">
+  
+  <div class="z-10 relative">
+    <!-- タイトル -->
+    <h3 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-3 font-mono group-hover:text-[var(--color-neon-cyan)] transition-colors">
+      {title}
+    </h3>
+    <p class="text-sm text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">
+      {description}
+    </p>
+  </div>
+  
+  <div class="z-10 mt-6 flex flex-col gap-4">
     <!-- タグ -->
-    <div class="card-tags">
-      {tags.map((tag) => <SkillBadge text={tag} />)}
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-2">
+        {tags.slice(0, 3).map((tag) => (
+          <span class="rounded bg-[var(--color-bg-base)] px-2 py-1 text-[0.65rem] font-mono text-[var(--color-text-primary)] border border-[var(--color-border-default)] shadow-[inset_0_0_5px_rgba(255,255,255,0.02)]">
+            # {tag}
+          </span>
+        ))}
+      </div>
+    )}
+    
+    <!-- サイバーな矢印アイコン -->
+    <div class="flex items-center justify-between border-t border-[var(--color-border-default)] pt-4 mt-2">
+      <span class="text-[0.65rem] uppercase tracking-[0.2em] font-mono text-[var(--color-text-muted)] group-hover:text-white transition-colors">Explore_</span>
+      <div class="w-8 h-8 rounded-full border border-[var(--color-border-default)] flex items-center justify-center group-hover:bg-[var(--color-neon-cyan-dim)] group-hover:border-[var(--color-neon-cyan)] transition-all transform group-hover:-rotate-45">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-muted)] group-hover:stroke-[var(--color-neon-cyan)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="M12 5l7 7-7 7"></path>
+        </svg>
+      </div>
     </div>
   </div>
-</article>
-
-<style>
-  .project-card {
-    position: relative;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border-default);
-    border-radius: 4px;
-    overflow: hidden;
-    transition: border-color 0.3s ease, transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .project-card:hover {
-    border-color: rgba(0, 255, 213, 0.3);
-    transform: translateY(-3px);
-  }
-
-  .project-card:hover .card-glow {
-    opacity: 1;
-  }
-
-  .project-card--featured {
-    border-color: rgba(0, 255, 213, 0.15);
-  }
-
-  /* グロウレイヤー */
-  .card-glow {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      ellipse at top left,
-      rgba(0, 255, 213, 0.06) 0%,
-      transparent 60%
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-  }
-
-  /* コーナーデコレーション */
-  .corner {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    pointer-events: none;
-    z-index: 2;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .project-card:hover .corner {
-    opacity: 1;
-  }
-
-  .corner-tl {
-    top: -1px; left: -1px;
-    border-top: 1px solid var(--color-neon-cyan);
-    border-left: 1px solid var(--color-neon-cyan);
-    box-shadow: -2px -2px 6px rgba(0, 255, 213, 0.3);
-  }
-
-  .corner-br {
-    bottom: -1px; right: -1px;
-    border-bottom: 1px solid var(--color-neon-cyan);
-    border-right: 1px solid var(--color-neon-cyan);
-    box-shadow: 2px 2px 6px rgba(0, 255, 213, 0.3);
-  }
-
-  /* 透明リンクオーバーレイ */
-  .card-link {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    border-radius: 4px;
-  }
-
-  .card-inner {
-    position: relative;
-    z-index: 0;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 0.75rem;
-  }
-
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .card-title-row {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    min-width: 0;
-  }
-
-  .card-index {
-    flex-shrink: 0;
-    color: var(--color-neon-cyan);
-    opacity: 0.7;
-    display: flex;
-    align-items: center;
-  }
-
-  .card-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    transition: color 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    letter-spacing: -0.01em;
-  }
-
-  .project-card:hover .card-title {
-    color: var(--color-neon-cyan);
-  }
-
-  .card-actions {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-shrink: 0;
-  }
-
-  .action-icon {
-    color: var(--color-text-muted);
-    transition: color 0.2s ease, filter 0.2s ease;
-    display: flex;
-    align-items: center;
-  }
-
-  .action-icon:hover {
-    color: var(--color-neon-cyan);
-    filter: drop-shadow(0 0 4px rgba(0, 255, 213, 0.5));
-  }
-
-  .card-description {
-    font-size: 0.8rem;
-    line-height: 1.7;
-    color: var(--color-text-muted);
-    flex: 1;
-  }
-
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: auto;
-  }
-</style>
+  
+  <!-- バックグラウンド装飾（右上の薄いロゴ的なもの） -->
+  <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none transform rotate-12 scale-150">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+</CyberBentoCard>

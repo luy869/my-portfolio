@@ -1,487 +1,118 @@
 ---
+import CyberBentoCard from "./ui/CyberBentoCard.astro";
 import { profile, socialLinks } from "../data/site";
 ---
 
-<section id="hero" class="hero">
-  <!-- パーティクル背景 -->
-  <div class="particles" aria-hidden="true">
-    {Array.from({ length: 20 }).map((_, i) => (
-      <div class="particle" style={`--delay: ${(i * 0.7) % 7}s; --duration: ${6 + (i % 5)}s; --x: ${(i * 37 + 13) % 95}%`}></div>
-    ))}
-  </div>
-
-  <!-- コーナーライン装飾 -->
-  <div class="corner-deco corner-deco--tl" aria-hidden="true">
-    <span class="line-h"></span>
-    <span class="line-v"></span>
-  </div>
-  <div class="corner-deco corner-deco--br" aria-hidden="true">
-    <span class="line-h"></span>
-    <span class="line-v"></span>
-  </div>
-
-  <div class="hero-inner">
-    <!-- ステータスバッジ -->
-    <div class="hero-status">
-      <span class="status-dot" aria-hidden="true"></span>
-      <span class="status-text">{profile.status}</span>
+<!-- =======================
+  1. Main Greeting (2x2)
+======================== -->
+<CyberBentoCard glowColor="cyan" className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 flex flex-col justify-between p-8 relative overflow-hidden group">
+  <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-striped-brick.png')] opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity"></div>
+  
+  <div class="z-10 mt-2">
+    <div class="inline-flex items-center gap-2 mb-6 border border-[var(--color-border-neon)] bg-[var(--color-neon-cyan-dim)] px-3 py-1.5 rounded-full">
+      <div class="w-2 h-2 rounded-full bg-[var(--color-neon-cyan)] animate-pulse"></div>
+      <span class="font-mono text-xs text-[var(--color-neon-cyan)] font-semibold uppercase tracking-widest">System Online</span>
     </div>
-
-    <!-- メインコピー（タイピングアニメーション） -->
-    <div class="hero-title-block">
-      <div class="hero-greeting">
-        <span class="terminal-prefix">$&nbsp;</span><span class="greeting-cmd">whoami</span>
-      </div>
-      <h1 class="hero-name">
-        <span id="typing-name"></span><span class="cursor-blink" aria-hidden="true"></span>
-      </h1>
-      <p class="hero-catch" id="typing-catch"></p>
-    </div>
-
-    <!-- bio -->
-    <p class="hero-bio">{profile.bio}</p>
-
-    <!-- CTA -->
-    <div class="hero-cta">
-      <a href="#projects" class="btn-primary neon-pulse">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-        </svg>
-        Projects
-      </a>
-      <a href="#about" class="btn-outline">About</a>
-      {socialLinks.map((link) => (
-        <a href={link.url} target="_blank" rel="noopener" class="btn-ghost">
-          {link.label}
-        </a>
-      ))}
-    </div>
-
-    <!-- スクロールインジケーター -->
-    <div class="scroll-indicator" aria-hidden="true">
-      <div class="scroll-line"></div>
-      <span class="scroll-label">scroll</span>
+    
+    <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-2 font-mono">
+      <span class="text-[var(--color-neon-magenta)]">&gt;</span> Hello_
+    </h1>
+    <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-4">
+      I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-neon-cyan)] to-[var(--color-neon-magenta)]">{profile.name}</span>
+    </h2>
+    <p class="text-[var(--color-text-secondary)] text-sm md:text-base max-w-md leading-relaxed mt-4">
+      Computer Science Student / Software Engineer.<br/>
+      Turning coffee into <span class="text-[var(--color-neon-cyan)]">glassmorphism</span> & <span class="text-[var(--color-neon-magenta)]">AI apps</span>.
+    </p>
+  </div>
+  
+  <div class="z-10 mt-auto pt-8">
+    <div class="font-mono text-sm text-[var(--color-text-muted)] flex items-center gap-2">
+      <span class="text-[var(--color-neon-cyan)]">$</span>
+      <span class="typing-effect overflow-hidden whitespace-nowrap border-r-2 border-[var(--color-neon-cyan)] pr-1">whoami --verbose</span>
     </div>
   </div>
+</CyberBentoCard>
 
-  <!-- 写真（六角形） -->
-  <div class="hero-photo-col" id="hero-photo-wrapper">
-    <div class="photo-frame">
-      <div class="photo-hex-wrap">
-        <img
-          src="/hero.jpg"
-          alt={profile.name}
-          class="photo-hex"
-          onerror="document.getElementById('hero-photo-wrapper').style.display='none'"
-        />
-      </div>
-      <div class="photo-glow" aria-hidden="true"></div>
-      <!-- 装飾ライン -->
-      <div class="photo-decoration" aria-hidden="true">
-        <span class="deco-line deco-line--1"></span>
-        <span class="deco-line deco-line--2"></span>
-        <span class="deco-dot"></span>
-      </div>
-    </div>
-    <div class="photo-label">
-      <span class="terminal-prefix">id:</span>
-      <span class="label-handle">{profile.handle}</span>
-    </div>
+<!-- =======================
+  2. Avatar Image (1x2)
+======================== -->
+<CyberBentoCard glowColor="magenta" className="col-span-1 md:col-span-2 lg:col-span-1 row-span-1 lg:row-span-2 !p-0 overflow-hidden relative group">
+  <!-- スマホ・タブレットではただの横長カード、PCでは縦長に -->
+  <div class="w-full h-full min-h-[200px] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={`background-image: url('${profile.avatarUrl}');`}>
+    <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-card)] via-transparent to-transparent"></div>
+    <div class="absolute inset-0 bg-[var(--color-neon-cyan)] opacity-10 mix-blend-overlay group-hover:opacity-0 transition-opacity"></div>
   </div>
-</section>
+  <div class="absolute bottom-4 left-4 border border-[var(--color-border-neon)] bg-[var(--color-bg-card)]/80 backdrop-blur-sm px-3 py-1 rounded font-mono text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+    <span class="text-[var(--color-neon-cyan)]">ID:</span> {profile.handle}
+  </div>
+</CyberBentoCard>
 
-<script>
-  // タイピングアニメーション
-  async function typeText(el: HTMLElement | null, text: string, delay = 60) {
-    if (!el) return;
-    for (const char of text) {
-      el.textContent += char;
-      await new Promise(r => setTimeout(r, delay));
-    }
-  }
+<!-- =======================
+  3. About Snippet (2x1 on PC)
+======================== -->
+<CyberBentoCard glowColor="yellow" className="col-span-1 md:col-span-2 lg:col-span-2 row-span-1 flex flex-col justify-center gap-3">
+  <div class="flex items-center gap-2 mb-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-neon-yellow)]" stroke-width="2">
+      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+    </svg>
+    <span class="text-xs font-mono text-white opacity-70 uppercase tracking-widest">Base</span>
+  </div>
+  <p class="text-sm font-medium text-white flex items-center justify-between">
+    <span>Tokyo, Japan</span>
+    <span class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+      <span class="text-xs text-[var(--color-text-secondary)] font-mono">Available</span>
+    </span>
+  </p>
+  
+  <div class="w-full h-px bg-[var(--color-border-default)] my-1"></div>
+  
+  <p class="text-xs text-[var(--color-text-secondary)] line-clamp-2 md:line-clamp-1">
+    {profile.bio}
+  </p>
+</CyberBentoCard>
 
-  (async () => {
-    await new Promise(r => setTimeout(r, 400));
-    const nameEl  = document.getElementById("typing-name");
-    const catchEl = document.getElementById("typing-catch");
-    await typeText(nameEl, "ゆう / luy869", 70);
-    await new Promise(r => setTimeout(r, 200));
-    await typeText(catchEl, "高度な技術を誰もが使いやすい形にするエンジニア", 45);
-  })();
-</script>
+<!-- =======================
+  4. Social Link 1: GitHub (1x1)
+======================== -->
+<CyberBentoCard href={socialLinks[0]?.url || "#"} glowColor="cyan" className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 flex items-center justify-center group bg-gradient-to-br from-[var(--color-bg-card)] to-[var(--color-bg-elevated)] min-h-[140px]">
+  <div class="flex flex-col items-center gap-3">
+    <div class="w-12 h-12 rounded-full border border-[var(--color-border-default)] group-hover:border-[var(--color-neon-cyan)] flex items-center justify-center transition-colors bg-[var(--color-bg-base)]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-primary)] group-hover:stroke-[var(--color-neon-cyan)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+      </svg>
+    </div>
+    <span class="text-xs font-mono font-semibold text-[var(--color-text-secondary)] group-hover:text-white transition-colors">GitHub</span>
+  </div>
+</CyberBentoCard>
+
+<!-- =======================
+  5. Social Link 2: Zenn (1x1)
+======================== -->
+<CyberBentoCard href={socialLinks[1]?.url || "#"} glowColor="magenta" className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 flex items-center justify-center group bg-gradient-to-br from-[var(--color-bg-card)] to-[var(--color-bg-elevated)] min-h-[140px]">
+  <div class="flex flex-col items-center gap-3">
+    <div class="w-12 h-12 rounded-full border border-[var(--color-border-default)] group-hover:border-[var(--color-neon-magenta)] flex items-center justify-center transition-colors bg-[var(--color-bg-base)]">
+      <!-- Zennの簡単なアイコン代用（ペンみたいなマーク） -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-primary)] group-hover:stroke-[var(--color-neon-magenta)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+        <path d="M2 2l7.58 7.58"></path>
+        <circle cx="11" cy="11" r="2"></circle>
+      </svg>
+    </div>
+    <span class="text-xs font-mono font-semibold text-[var(--color-text-secondary)] group-hover:text-white transition-colors">Zenn.dev</span>
+  </div>
+</CyberBentoCard>
 
 <style>
-  /* ========== ヒーローセクション ========== */
-  .hero {
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 3rem;
-    padding: 6rem 4rem 4rem;
-    overflow: hidden;
+  .typing-effect {
+    animation: typing 3s steps(30, end) infinite;
   }
-
-  @media (max-width: 1024px) {
-    .hero {
-      flex-direction: column;
-      justify-content: center;
-      padding: 6rem 1.5rem 3rem;
-      gap: 3rem;
-      text-align: center;
-    }
-  }
-
-  /* ========== パーティクル ========== */
-  .particles {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .particle {
-    position: absolute;
-    bottom: -10px;
-    left: var(--x);
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to top, var(--color-neon-cyan), transparent);
-    opacity: 0;
-    animation: particle-drift var(--duration) ease-in var(--delay) infinite;
-  }
-
-  /* ========== コーナーデコレーション ========== */
-  .corner-deco {
-    position: absolute;
-    pointer-events: none;
-  }
-
-  .corner-deco--tl {
-    top: 2rem; left: 2rem;
-  }
-
-  .corner-deco--br {
-    bottom: 2rem; right: 2rem;
-    transform: rotate(180deg);
-  }
-
-  .line-h {
-    position: absolute;
-    top: 0; left: 0;
-    display: block;
-    width: 40px;
-    height: 1px;
-    background: rgba(0, 255, 213, 0.4);
-  }
-
-  .line-v {
-    position: absolute;
-    top: 0; left: 0;
-    display: block;
-    width: 1px;
-    height: 40px;
-    background: rgba(0, 255, 213, 0.4);
-  }
-
-  /* ========== ヒーローコンテンツ ========== */
-  .hero-inner {
-    flex: 1;
-    max-width: 600px;
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  /* ステータスバッジ */
-  .hero-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 0.85rem;
-    border: 1px solid rgba(0, 255, 213, 0.2);
-    border-radius: 2px;
-    background: rgba(0, 255, 213, 0.04);
-    width: fit-content;
-  }
-
-  @media (max-width: 1024px) {
-    .hero-status { margin-inline: auto; }
-  }
-
-  .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 9999px;
-    background: var(--color-neon-cyan);
-    box-shadow: 0 0 6px var(--color-neon-cyan-glow);
-    animation: neon-pulse 2s ease-in-out infinite;
-  }
-
-  .status-text {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 340px;
-  }
-
-  /* グリーティング */
-  .hero-greeting {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    margin-bottom: -1rem;
-  }
-
-  .greeting-cmd {
-    color: var(--color-text-muted);
-    opacity: 0.7;
-  }
-
-  /* 名前 */
-  .hero-title-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .hero-name {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 700;
-    color: var(--color-text-primary);
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    min-height: 1.2em;
-  }
-
-  /* カーソルは cursor-blink クラスで制御（global.css） */
-
-  .hero-catch {
-    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-    color: var(--color-neon-cyan);
-    text-shadow: 0 0 12px rgba(0, 255, 213, 0.4);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    min-height: 1.5em;
-  }
-
-  /* bio */
-  .hero-bio {
-    font-size: 0.875rem;
-    line-height: 1.8;
-    color: var(--color-text-muted);
-    max-width: 500px;
-  }
-
-  @media (max-width: 1024px) {
-    .hero-bio { margin-inline: auto; }
-  }
-
-  /* CTA ボタン群 */
-  .hero-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  @media (max-width: 1024px) {
-    .hero-cta { justify-content: center; }
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.65rem 1.25rem;
-    background: var(--color-neon-cyan);
-    color: var(--color-bg-void);
-    font-size: 0.8rem;
-    font-weight: 700;
-    border-radius: 2px;
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: opacity 0.2s, transform 0.2s;
-    font-family: var(--font-mono);
-  }
-
-  .btn-primary:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
-  }
-
-  .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.65rem 1.25rem;
-    border: 1px solid rgba(0, 255, 213, 0.3);
-    color: var(--color-neon-cyan);
-    font-size: 0.8rem;
-    font-family: var(--font-mono);
-    border-radius: 2px;
-    text-decoration: none;
-    background: transparent;
-    transition: all 0.2s ease;
-  }
-
-  .btn-outline:hover {
-    background: rgba(0, 255, 213, 0.08);
-    box-shadow: 0 0 12px rgba(0, 255, 213, 0.2);
-  }
-
-  .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.65rem 1rem;
-    color: var(--color-text-muted);
-    font-size: 0.75rem;
-    font-family: var(--font-mono);
-    border-radius: 2px;
-    text-decoration: none;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    transition: all 0.2s ease;
-  }
-
-  .btn-ghost:hover {
-    color: var(--color-text-secondary);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-
-  /* スクロールインジケーター */
-  .scroll-indicator {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.4rem;
-    margin-top: 1rem;
-    opacity: 0.5;
-  }
-
-  @media (max-width: 1024px) {
-    .scroll-indicator { display: none; }
-  }
-
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, var(--color-neon-cyan), transparent);
-    animation: float 2s ease-in-out infinite;
-  }
-
-  .scroll-label {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--color-neon-cyan);
-    letter-spacing: 0.15em;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-  }
-
-  /* ========== 写真カラム ========== */
-  .hero-photo-col {
-    position: relative;
-    z-index: 1;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .photo-frame {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .photo-hex-wrap {
-    position: relative;
-    z-index: 1;
-  }
-
-  .photo-hex {
-    width: 220px;
-    height: 220px;
-    object-fit: cover;
-    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
-    filter: saturate(0.8) contrast(1.1);
-    transition: filter 0.4s ease;
-  }
-
-  @media (max-width: 1024px) {
-    .photo-hex { width: 160px; height: 160px; }
-  }
-
-  .photo-hex:hover {
-    filter: saturate(1) contrast(1);
-  }
-
-  .photo-glow {
-    position: absolute;
-    inset: -20px;
-    background: radial-gradient(
-      ellipse at center,
-      rgba(0, 255, 213, 0.15) 0%,
-      transparent 70%
-    );
-    filter: blur(20px);
-    pointer-events: none;
-  }
-
-  /* 装飾ライン */
-  .photo-decoration {
-    position: absolute;
-    inset: -30px;
-    pointer-events: none;
-  }
-
-  .deco-line {
-    position: absolute;
-    background: rgba(0, 255, 213, 0.3);
-  }
-
-  .deco-line--1 {
-    top: 10px; right: 0;
-    width: 1px; height: 60px;
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .deco-line--2 {
-    bottom: 20px; left: 0;
-    width: 40px; height: 1px;
-    animation: float 3s ease-in-out 1s infinite;
-  }
-
-  .deco-dot {
-    position: absolute;
-    top: 10px; right: -3px;
-    width: 5px; height: 5px;
-    border-radius: 9999px;
-    background: var(--color-neon-cyan);
-    box-shadow: 0 0 8px var(--color-neon-cyan-glow);
-  }
-
-  /* ラベル */
-  .photo-label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .label-handle {
-    color: var(--color-neon-cyan);
-    opacity: 0.8;
+  @keyframes typing {
+    0% { width: 0; }
+    50% { width: 100%; }
+    100% { width: 100%; } 
   }
 </style>

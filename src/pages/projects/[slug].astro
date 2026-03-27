@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
+import CyberBentoCard from "../../components/ui/CyberBentoCard.astro";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -17,359 +18,186 @@ const { Content } = await render(project);
 ---
 
 <Layout title={`${project.data.title} | rui`} description={project.data.description}>
-  <Header />
+  
+  <div class="grid-overlay pointer-events-none fixed inset-0 z-[-1]"></div>
+  <div class="scanlines pointer-events-none fixed inset-0 z-[-1]"></div>
 
-  <main class="flex-1">
-    <article class="project-detail">
-      <!-- 戻るリンク -->
-      <a href="/#projects" class="back-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span class="back-text">cd ../projects</span>
-      </a>
+  <div class="relative z-10 px-4 md:px-8 max-w-4xl mx-auto pb-20 pt-8 flex flex-col gap-6">
+    <Header />
 
-      <!-- タグ -->
-      <div class="detail-tags">
-        {project.data.tags.map((tag) => (
-          <span class="detail-tag">
-            <span class="tag-hash" aria-hidden="true">#</span>{tag}
-          </span>
-        ))}
+    <!-- 戻るリンク -->
+    <a href="/#projects" class="inline-flex items-center gap-2 font-mono text-xs tracking-widest uppercase text-[var(--color-neon-cyan)] hover:text-white transition-colors w-fit border border-[var(--color-neon-cyan)]/30 bg-[var(--color-neon-cyan-dim)] px-4 py-2 rounded">
+      &larr; cd ../
+    </a>
+
+    <!-- ヘッダーカード -->
+    <CyberBentoCard glowColor="magenta" className="mb-4 !p-6 md:!p-10 relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none text-9xl font-bold italic mix-blend-overlay">
+        {project.data.title.substring(0, 2).toUpperCase()}
       </div>
 
-      <!-- タイトル -->
-      <div class="detail-titleblock">
-        <div class="detail-prompt">
-          <span class="prompt-sym">$</span>
-          <span class="prompt-cmd">display_project</span>
+      <div class="flex flex-col gap-6 relative z-10">
+        
+        {project.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {project.data.tags.map(tag => (
+              <span class="rounded bg-[var(--color-bg-base)] px-2.5 py-1 text-xs font-mono font-semibold text-white border border-[var(--color-border-default)] shadow-[0_0_10px_rgba(255,255,255,0.05)]">
+                # {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        <div>
+          <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mt-2 mb-4 font-mono">
+            {project.data.title}
+          </h1>
+          <p class="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed">
+            {project.data.description}
+          </p>
         </div>
-        <h1 class="detail-title">{project.data.title}</h1>
-        <p class="detail-desc">{project.data.description}</p>
+
+        <!-- リンク -->
+        {(project.data.github || project.data.link) && (
+          <div class="flex flex-wrap gap-4 mt-4">
+            {project.data.github && (
+              <a href={project.data.github} target="_blank" rel="noopener" class="inline-flex items-center justify-center font-mono text-xs tracking-widest uppercase text-white hover:text-[var(--color-neon-cyan)] hover:border-[var(--color-neon-cyan)] hover:shadow-[0_0_15px_rgba(0,255,213,0.3)] transition-all border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-6 py-3 rounded">
+                [ GitHub ]
+              </a>
+            )}
+             {project.data.link && (
+              <a href={project.data.link} target="_blank" rel="noopener" class="inline-flex items-center justify-center font-mono text-xs tracking-widest uppercase text-[var(--color-bg-base)] bg-[var(--color-neon-cyan)] hover:bg-white transition-all shadow-[0_0_15px_rgba(0,255,213,0.4)] px-6 py-3 rounded font-bold">
+                Run App &gt;
+              </a>
+            )}
+          </div>
+        )}
       </div>
+    </CyberBentoCard>
 
-      <!-- 外部リンクボタン -->
-      {(project.data.github || project.data.link) && (
-        <div class="detail-links">
-          {project.data.github && (
-            <a
-              href={project.data.github}
-              target="_blank"
-              rel="noopener"
-              class="detail-link-btn detail-link-btn--ghost"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 .5C5.6.5.5 5.6.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.5-.3-5.2-1.3-5.2-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5.5 18.3 5.8 18.3 5.8c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.2 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6C20.2 21.4 23.5 17.1 23.5 12 23.5 5.6 18.4.5 12 .5z"/>
-              </svg>
-              GitHub
-            </a>
-          )}
-          {project.data.link && (
-            <a
-              href={project.data.link}
-              target="_blank"
-              rel="noopener"
-              class="detail-link-btn detail-link-btn--primary"
-            >
-              サイトを見る
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          )}
-        </div>
-      )}
+    <!-- 本文 -->
+    <CyberBentoCard glowColor="none" className="prose-container !p-6 md:!p-10">
+      <Content />
+    </CyberBentoCard>
 
-      <!-- 区切り線 -->
-      <div class="detail-divider" aria-hidden="true">
-        <span class="div-line"></span>
-        <span class="div-label">content</span>
-        <span class="div-line"></span>
-      </div>
-
-      <!-- Markdownコンテンツ -->
-      <div class="prose-content">
-        <Content />
-      </div>
-    </article>
-  </main>
-
-  <Footer />
+    <Footer />
+  </div>
 </Layout>
 
-<style>
-  .project-detail {
-    max-width: 780px;
-    margin-inline: auto;
-    padding: 7rem 2rem 5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  /* ========== 戻るリンク ========== */
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-    width: fit-content;
-  }
-
-  .back-link:hover {
-    color: var(--color-neon-cyan);
-  }
-
-  .back-text {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-color: rgba(0, 255, 213, 0.25);
-  }
-
-  /* ========== タグ ========== */
-  .detail-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .detail-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.15em;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
-    border: 1px solid rgba(0, 255, 213, 0.2);
-    border-radius: 2px;
+<style is:global>
+  .prose-container {
     color: var(--color-text-secondary);
-    background: rgba(0, 255, 213, 0.03);
+    font-size: 0.95rem;
+    line-height: 1.8;
   }
-
-  .tag-hash {
-    color: var(--color-neon-cyan);
-    opacity: 0.7;
-  }
-
-  /* ========== タイトルブロック ========== */
-  .detail-titleblock {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-left: 2px solid var(--color-neon-cyan);
-    background: var(--color-bg-surface);
-    border-radius: 0 4px 4px 0;
-  }
-
-  .detail-prompt {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .prompt-sym {
-    color: var(--color-neon-cyan);
-    text-shadow: 0 0 6px rgba(0, 255, 213, 0.4);
-  }
-
-  .prompt-cmd { opacity: 0.7; }
-
-  .detail-title {
-    font-size: clamp(1.5rem, 4vw, 2rem);
+  
+  .prose-container h2 {
+    color: white;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: var(--color-text-primary);
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-  }
-
-  .detail-desc {
-    font-size: 0.875rem;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-  }
-
-  /* ========== リンクボタン ========== */
-  .detail-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .detail-link-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border-neon);
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    padding: 0.55rem 1rem;
-    border-radius: 2px;
+    text-shadow: 0 0 10px rgba(0,255,213,0.3);
+  }
+  
+  .prose-container h2::before {
+    content: "> ";
+    color: var(--color-neon-cyan);
+  }
+
+  .prose-container h3 {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+  }
+  
+  .prose-container h3::before {
+    content: "## ";
+    color: var(--color-neon-magenta);
+  }
+
+  .prose-container p {
+    margin-bottom: 1.25rem;
+  }
+  
+  .prose-container a {
+    color: var(--color-neon-cyan);
     text-decoration: none;
+    border-bottom: 1px dashed var(--color-neon-cyan);
     transition: all 0.2s;
   }
 
-  .detail-link-btn--ghost {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--color-text-secondary);
-    background: transparent;
+  .prose-container a:hover {
+    color: white;
+    border-bottom-color: white;
+    text-shadow: 0 0 8px rgba(0,255,213,0.8);
   }
-
-  .detail-link-btn--ghost:hover {
-    border-color: rgba(0, 255, 213, 0.3);
-    color: var(--color-neon-cyan);
-  }
-
-  .detail-link-btn--primary {
-    background: var(--color-neon-cyan);
-    color: var(--color-bg-void);
-    font-weight: 700;
-  }
-
-  .detail-link-btn--primary:hover {
-    opacity: 0.85;
-  }
-
-  /* ========== 区切り線 ========== */
-  .detail-divider {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .div-line {
-    flex: 1;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  .div-label {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--color-text-muted);
-    opacity: 0.4;
-    letter-spacing: 0.1em;
-  }
-</style>
-
-<style is:global>
-  /* ========== Markdownコンテンツ ========== */
-  .prose-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .prose-content h2 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-top: 2.5rem;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(0, 255, 213, 0.1);
-    font-family: var(--font-mono);
-    letter-spacing: -0.01em;
-  }
-
-  .prose-content h2::before {
-    content: '## ';
-    color: var(--color-neon-cyan);
-    opacity: 0.5;
-  }
-
-  .prose-content h3 {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-top: 1.5rem;
-    margin-bottom: 0.4rem;
-    font-family: var(--font-mono);
-  }
-
-  .prose-content h3::before {
-    content: '### ';
-    color: var(--color-neon-cyan);
-    opacity: 0.4;
-    font-size: 0.8rem;
-  }
-
-  .prose-content p {
-    font-size: 0.875rem;
-    line-height: 1.8;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.75rem;
-  }
-
-  .prose-content ul {
-    margin-bottom: 1rem;
+  
+  .prose-container ul {
+    list-style-type: none;
     padding-left: 0;
-    list-style: none;
+    margin-bottom: 1.5rem;
   }
-
-  .prose-content li {
-    font-size: 0.875rem;
-    line-height: 1.75;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.35rem;
-    padding-left: 1.25rem;
+  
+  .prose-container li {
     position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
   }
 
-  .prose-content li::before {
-    content: '▸';
+  .prose-container li::before {
+    content: "-";
     position: absolute;
     left: 0;
     color: var(--color-neon-cyan);
-    opacity: 0.7;
-    font-size: 0.7rem;
+    font-weight: bold;
   }
-
-  .prose-content strong {
+  
+  .prose-container strong {
+    color: white;
     font-weight: 600;
-    color: var(--color-text-primary);
   }
-
-  .prose-content code {
+  
+  .prose-container code {
+    background-color: var(--color-bg-base);
+    color: var(--color-neon-magenta);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
-    background: var(--color-bg-elevated);
-    border: 1px solid rgba(0, 255, 213, 0.15);
-    border-radius: 2px;
-    padding: 0.1rem 0.35rem;
-    color: var(--color-neon-cyan);
+    border: 1px solid var(--color-border-default);
   }
-
-  .prose-content pre {
-    background: var(--color-bg-surface);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 4px;
+  
+  .prose-container pre {
+    background-color: var(--color-bg-base);
+    border: 1px solid var(--color-border-default);
+    border-radius: 0.5rem;
     padding: 1rem;
     overflow-x: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
-
-  .prose-content pre code {
-    background: none;
-    border: none;
+  
+  .prose-container pre code {
+    background-color: transparent;
     padding: 0;
-    color: var(--color-text-secondary);
-    font-size: 0.8rem;
+    border: none;
+    color: inherit;
+    font-size: 0.85rem;
   }
-
-  .prose-content blockquote {
-    border-left: 2px solid var(--color-neon-cyan);
-    padding-left: 1rem;
-    margin-left: 0;
-    margin-bottom: 1rem;
-    color: var(--color-text-muted);
+  
+  .prose-container blockquote {
+    border-left: 2px solid var(--color-neon-magenta);
+    background: rgba(255,0,170,0.05);
+    padding: 1rem;
+    color: var(--color-text-secondary);
     font-style: italic;
-    opacity: 0.8;
+    margin-bottom: 1.5rem;
+    border-radius: 0 0.5rem 0.5rem 0;
   }
 </style>

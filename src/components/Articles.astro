@@ -1,5 +1,5 @@
 ---
-import SectionHeading from "./ui/SectionHeading.astro";
+import CyberBentoCard from "./ui/CyberBentoCard.astro";
 
 interface ZennArticle {
   title: string;
@@ -15,7 +15,7 @@ try {
   const data = await res.json();
   articles = data.articles ?? [];
 } catch {
-  // ビルド時にAPIが取れなくても壊れないようにフォールバック
+  // フォーバック
 }
 
 function formatDate(dateStr: string) {
@@ -24,224 +24,37 @@ function formatDate(dateStr: string) {
 }
 ---
 
-<section id="articles" data-fade class="articles-section scroll-mt-24">
-  <div class="section-container">
-    <SectionHeading title="Articles" />
-
-    {articles.length === 0 ? (
-      <div class="empty-state">
-        <span class="terminal-prefix">$&nbsp;</span>
-        <span class="empty-text">No articles cached at build time.</span>
+{articles.length > 0 && articles.slice(0, 3).map((article) => (
+  <CyberBentoCard href={`https://zenn.dev/luy849/articles/${article.slug}`} glowColor="yellow" className="group flex flex-col justify-between h-full !p-6 aspect-square sm:aspect-auto sm:min-h-[220px]">
+    
+    <div class="z-10 relative">
+      <div class="text-4xl mb-4 group-hover:scale-110 transition-transform origin-bottom-left inline-block">
+        {article.emoji}
       </div>
-    ) : (
-      <div class="articles-grid">
-        {articles.map((article) => (
-          <a
-            href={`https://zenn.dev/luy849/articles/${article.slug}`}
-            target="_blank"
-            rel="noopener"
-            class="article-card"
-          >
-            <!-- グロウ -->
-            <div class="article-glow" aria-hidden="true"></div>
-
-            <!-- トップライン -->
-            <div class="article-topline" aria-hidden="true"></div>
-
-            <div class="article-inner">
-              <div class="article-emoji">{article.emoji}</div>
-              <p class="article-title">{article.title}</p>
-              <div class="article-meta">
-                <span class="article-date">{formatDate(article.published_at)}</span>
-                <span class="article-likes">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                  </svg>
-                  {article.liked_count}
-                </span>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    )}
-
-    <!-- すべて見るリンク -->
-    <div class="articles-footer">
-      <a
-        href="https://zenn.dev/luy849"
-        target="_blank"
-        rel="noopener"
-        class="view-all-link"
-      >
-        <span class="terminal-prefix">$&nbsp;</span>
-        <span class="link-text">open zenn.dev/luy849</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-        </svg>
-      </a>
+      <h3 class="text-base font-bold tracking-tight text-[var(--color-text-primary)] leading-snug line-clamp-3 group-hover:text-[#f5ff50] transition-colors shadow-black">
+        {article.title}
+      </h3>
     </div>
+    
+    <div class="z-10 mt-6 flex items-center justify-between border-t border-[var(--color-border-default)] pt-4 text-[var(--color-text-muted)] group-hover:text-white transition-colors">
+      <span class="text-xs font-mono tracking-wider">{formatDate(article.published_at)}</span>
+      <span class="flex items-center gap-1.5 text-xs font-mono font-bold">
+        <svg class="h-3 w-3 fill-current" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+        </svg>
+        {article.liked_count}
+      </span>
+    </div>
+    
+  </CyberBentoCard>
+))}
+
+<!-- Zennリンク用カード（4枠目） -->
+<CyberBentoCard href="https://zenn.dev/luy849" glowColor="cyan" className="group flex flex-col items-center justify-center gap-4 !p-6 aspect-square sm:aspect-auto sm:min-h-[220px] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]">
+  <div class="z-10 flex flex-col items-center">
+    <div class="w-12 h-12 rounded-full border border-[var(--color-border-neon)] flex items-center justify-center group-hover:bg-[var(--color-neon-cyan-dim)] transition-colors mb-3">
+      <span class="text-[var(--color-neon-cyan)] font-mono font-bold">&gt;</span>
+    </div>
+    <span class="text-sm font-mono text-center text-white tracking-widest uppercase">Visit<br/>Zenn.dev</span>
   </div>
-</section>
-
-<style>
-  .articles-section {
-    padding-block: 6rem;
-  }
-
-  .empty-state {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .empty-text { opacity: 0.6; }
-
-  /* ========== グリッド ========== */
-  .articles-grid {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: 1fr;
-  }
-
-  @media (min-width: 560px) {
-    .articles-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (min-width: 900px) {
-    .articles-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  /* ========== カード ========== */
-  .article-card {
-    position: relative;
-    display: block;
-    background: var(--color-bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-    overflow: hidden;
-    text-decoration: none;
-    transition: border-color 0.3s ease, transform 0.3s ease;
-  }
-
-  .article-card:hover {
-    border-color: rgba(0, 255, 213, 0.25);
-    transform: translateY(-3px);
-  }
-
-  .article-card:hover .article-glow { opacity: 1; }
-  .article-card:hover .article-topline { opacity: 1; }
-
-  .article-glow {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      ellipse at top right,
-      rgba(0, 255, 213, 0.07) 0%,
-      transparent 60%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  .article-topline {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(0, 255, 213, 0.5),
-      transparent
-    );
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .article-inner {
-    position: relative;
-    padding: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    height: 100%;
-  }
-
-  .article-emoji {
-    font-size: 1.5rem;
-    line-height: 1;
-  }
-
-  .article-title {
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    line-height: 1.55;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex: 1;
-    transition: color 0.2s;
-  }
-
-  .article-card:hover .article-title {
-    color: var(--color-neon-cyan);
-  }
-
-  .article-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 0.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-  }
-
-  .article-date {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
-    letter-spacing: 0.05em;
-  }
-
-  .article-likes {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--color-neon-magenta);
-    opacity: 0.7;
-  }
-
-  /* ========== フッターリンク ========== */
-  .articles-footer {
-    margin-top: 1.5rem;
-  }
-
-  .view-all-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .view-all-link:hover {
-    color: var(--color-neon-cyan);
-  }
-
-  .link-text {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-color: rgba(0, 255, 213, 0.3);
-  }
-</style>
+</CyberBentoCard>

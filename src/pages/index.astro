@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
-import About from "../components/About.astro";
 import Projects from "../components/Projects.astro";
 import Skills from "../components/Skills.astro";
 import Experience from "../components/Experience.astro";
@@ -12,17 +11,79 @@ import { siteConfig } from "../data/site";
 ---
 
 <Layout title={siteConfig.title} description={siteConfig.description}>
-  <!-- ナビゲーション（ドットサイドバー + モバイルオーバーレイ） -->
-  <Header />
+  <!-- レトロフューチャーなグリッド・スキャンライン背景 -->
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
 
-  <main class="flex-1">
-    <Hero />
-    <About />
-    <Projects />
-    <Skills />
-    <Experience />
-    <Articles />
-  </main>
+  <div class="relative z-10 px-4 md:px-8 max-w-[1400px] mx-auto pb-20 pt-8 flex flex-col gap-10">
+    
+    <Header />
 
-  <Footer />
+    <!-- ==============================================
+         Main Cyber Bento Grid 
+         ============================================== -->
+    <main class="w-full">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 auto-rows-[minmax(140px,auto)]">
+        <!-- Hero: 挨拶 (2x2), Avatar (1x2), Location (2x1), GitHub (1x1), Zenn (1x1) -->
+        <Hero />
+      </div>
+      
+      <!-- ==============================================
+           Projects & Skills Grid (Mix Bento)
+           ============================================== -->
+      <div class="mt-8 lg:mt-12 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <!-- Projects (3 Columns) -->
+          <div class="lg:col-span-3">
+            <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-4 flex items-center gap-2">
+              <span class="text-[var(--color-neon-cyan)] font-mono text-sm leading-none">$</span>
+              <span class="glitch" data-text="./projects --all">./projects --all</span>
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 auto-rows-fr">
+              <Projects />
+            </div>
+          </div>
+          
+          <!-- Skills (1 Column) -->
+          <div class="lg:col-span-1 flex flex-col gap-4">
+            <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-4 flex items-center gap-2">
+              <span class="text-[var(--color-neon-magenta)] font-mono text-sm leading-none">$</span>
+              <span class="glitch" data-text="./skills">./skills</span>
+            </h2>
+            <Skills />
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================================
+           Experience (Wide Bento)
+           ============================================== -->
+      <div class="mt-8 lg:mt-12 w-full">
+        <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-4 flex items-center gap-2">
+          <span class="text-[var(--color-neon-cyan)] font-mono text-sm leading-none">$</span>
+          <span class="glitch" data-text="cat experience.log">cat experience.log</span>
+        </h2>
+        <div class="grid grid-cols-1 gap-4">
+          <Experience />
+        </div>
+      </div>
+
+      <!-- ==============================================
+           Articles (Square Grid)
+           ============================================== -->
+      <div class="mt-8 lg:mt-12 w-full">
+        <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white mb-4 flex items-center gap-2">
+          <span class="text-[var(--color-neon-cyan)] font-mono text-sm leading-none">$</span>
+          <span class="glitch" data-text="curl -X GET /articles">curl -X GET /articles</span>
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Articles />
+        </div>
+      </div>
+
+    </main>
+
+    <Footer />
+  </div>
 </Layout>

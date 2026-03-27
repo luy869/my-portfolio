@@ -1,0 +1,47 @@
+---
+interface Props {
+  className?: string;
+  as?: any;
+  href?: string;
+  glowColor?: 'cyan' | 'magenta' | 'yellow' | 'none';
+}
+
+const { className = "", as: Tag = "div", href, glowColor = 'none' } = Astro.props;
+const isInteractive = !!href;
+const Element = isInteractive ? "a" : Tag;
+
+// グラスモーフィズムとサイバー風のベーススタイル
+let baseClass = "cyber-bento-card glass relative overflow-hidden rounded-2xl md:rounded-3xl p-6 md:p-8 transition-all duration-300 border border-[var(--color-border-default)]";
+
+if (isInteractive) {
+  baseClass += " hover:-translate-y-1 block cursor-pointer group";
+  
+  // ホバー時の発光色
+  if (glowColor === 'cyan') {
+    baseClass += " hover:border-[var(--color-neon-cyan)] hover:shadow-[0_0_15px_rgba(0,255,213,0.3)]";
+  } else if (glowColor === 'magenta') {
+    baseClass += " hover:border-[var(--color-neon-magenta)] hover:shadow-[0_0_15px_rgba(255,0,170,0.3)]";
+  } else if (glowColor === 'yellow') {
+    baseClass += " hover:border-[#f5ff50] hover:shadow-[0_0_15px_rgba(245,255,80,0.3)]";
+  } else {
+    baseClass += " hover:border-[rgba(255,255,255,0.2)] hover:shadow-lg";
+  }
+}
+
+// 共通エフェクト：背景のうっすらした光
+const bgGlowClass = isInteractive 
+  ? "absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" 
+  : "absolute inset-0 bg-gradient-to-br from-white/2 to-transparent pointer-events-none";
+
+const elementProps = href ? { href, class: `${baseClass} ${className}` } : { class: `${baseClass} ${className}` };
+---
+
+<Element {...elementProps}>
+  <div class={bgGlowClass} aria-hidden="true"></div>
+  <!-- カードの上の光の線 -->
+  {isInteractive && <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--color-neon-cyan)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
+  
+  <div class="relative z-10 h-full flex flex-col justify-between">
+    <slot />
+  </div>
+</Element>
