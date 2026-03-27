@@ -4,41 +4,78 @@ import { profile, socialLinks } from "../data/site";
 ---
 
 <!-- =======================
-  1. Main Greeting (2x2)
+  1. Main Greeting & Socials (2x2)
 ======================== -->
-<CyberBentoCard glowColor="cyan" className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 flex flex-col justify-between p-8 relative overflow-hidden group">
+<CyberBentoCard glowColor="cyan" className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 overflow-hidden relative group !p-0">
   <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-striped-brick.png')] opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity"></div>
   
-  <div class="z-10 mt-2">
-    <div class="inline-flex items-center gap-2 mb-6 border border-[var(--color-border-neon)] bg-[var(--color-neon-cyan-dim)] px-3 py-1.5 rounded-full">
-      <div class="w-2 h-2 rounded-full bg-[var(--color-neon-cyan)] animate-pulse"></div>
-      <span class="font-mono text-xs text-[var(--color-neon-cyan)] font-semibold uppercase tracking-widest">System Online</span>
+  <div class="flex flex-row items-stretch h-full w-full relative z-10">
+    
+    <!-- Main Content (Left Side) -->
+    <div class="flex-1 p-6 md:p-8 flex flex-col justify-between min-w-0">
+      <div class="mt-2">
+        <div class="inline-flex items-center gap-2 mb-6 border border-[var(--color-border-neon)] bg-[var(--color-neon-cyan-dim)] px-3 py-1.5 rounded-full">
+          <div class="w-2 h-2 rounded-full bg-[var(--color-neon-cyan)] animate-pulse"></div>
+          <span class="font-mono text-xs text-[var(--color-neon-cyan)] font-semibold uppercase tracking-widest">System Online</span>
+        </div>
+        
+        <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-2 font-mono">
+          <span class="text-[var(--color-neon-magenta)]">&gt;</span> Hello_
+        </h1>
+        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-4 block">
+          I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-neon-cyan)] to-[var(--color-neon-magenta)]">{profile.name}</span>
+        </h2>
+        <p class="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed mt-4">
+          Computer Science Student / Software Engineer.<br/>
+          Turning coffee into <span class="text-[var(--color-neon-cyan)]">glassmorphism</span> & <span class="text-[var(--color-neon-magenta)]">AI apps</span>.
+        </p>
+      </div>
+      
+      <div class="mt-8 pt-4">
+        <div class="font-mono text-sm text-[var(--color-text-muted)] flex items-center gap-2">
+          <span class="text-[var(--color-neon-cyan)]">$</span>
+          <span class="typing-effect overflow-hidden whitespace-nowrap border-r-2 border-[var(--color-neon-cyan)] pr-1">whoami --verbose</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Social Links -->
+    <div class="w-16 sm:w-20 shrink-0 border-l border-[var(--color-border-default)] bg-[var(--color-bg-base)]/50 backdrop-blur-sm flex flex-col items-center justify-center gap-6 py-6 z-20">
+      
+      <!-- GitHub -->
+      <a href={socialLinks[0]?.url || "#"} title="GitHub" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-cyan)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(0,255,213,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-secondary)] group-hover/btn:stroke-[var(--color-neon-cyan)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+      </a>
+
+      <!-- Zenn -->
+      <a href={socialLinks[1]?.url || "#"} title="Zenn" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-magenta)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(255,0,170,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-secondary)] group-hover/btn:stroke-[var(--color-neon-magenta)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+          <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+          <path d="M2 2l7.58 7.58"></path>
+          <circle cx="11" cy="11" r="2"></circle>
+        </svg>
+      </a>
+
+      <!-- X (Twitter) -->
+      <a href={socialLinks[2]?.url || "#"} title="X (Twitter)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-yellow)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(245,255,80,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--color-text-secondary)] group-hover/btn:text-[var(--color-neon-yellow)] transition-colors">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.005 4.15H5.059z"/>
+        </svg>
+      </a>
+      
     </div>
     
-    <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-white mb-2 font-mono">
-      <span class="text-[var(--color-neon-magenta)]">&gt;</span> Hello_
-    </h1>
-    <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-4">
-      I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-neon-cyan)] to-[var(--color-neon-magenta)]">{profile.name}</span>
-    </h2>
-    <p class="text-[var(--color-text-secondary)] text-sm md:text-base max-w-md leading-relaxed mt-4">
-      Computer Science Student / Software Engineer.<br/>
-      Turning coffee into <span class="text-[var(--color-neon-cyan)]">glassmorphism</span> & <span class="text-[var(--color-neon-magenta)]">AI apps</span>.
-    </p>
-  </div>
-  
-  <div class="z-10 mt-auto pt-8">
-    <div class="font-mono text-sm text-[var(--color-text-muted)] flex items-center gap-2">
-      <span class="text-[var(--color-neon-cyan)]">$</span>
-      <span class="typing-effect overflow-hidden whitespace-nowrap border-r-2 border-[var(--color-neon-cyan)] pr-1">whoami --verbose</span>
-    </div>
   </div>
 </CyberBentoCard>
+
 
 <!-- =======================
   2. Avatar Image (1x2)
 ======================== -->
-<CyberBentoCard glowColor="magenta" className="col-span-1 md:col-span-2 lg:col-span-1 row-span-1 lg:row-span-2 !p-0 overflow-hidden relative group">
+<CyberBentoCard glowColor="magenta" className="col-span-1 md:col-span-1 lg:col-span-1 row-span-2 !p-0 overflow-hidden relative group">
   <!-- スマホ・タブレットではただの横長カード、PCでは縦長に -->
   <div class="w-full h-full min-h-[200px] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={`background-image: url('${profile.avatarUrl}');`}>
     <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-card)] via-transparent to-transparent"></div>
@@ -50,60 +87,42 @@ import { profile, socialLinks } from "../data/site";
 </CyberBentoCard>
 
 <!-- =======================
-  3. About Snippet (2x1 on PC)
+  3. About Snippet (2x2)
 ======================== -->
-<CyberBentoCard glowColor="yellow" className="col-span-1 md:col-span-2 lg:col-span-2 row-span-1 flex flex-col justify-center gap-3">
-  <div class="flex items-center gap-2 mb-2">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-neon-yellow)]" stroke-width="2">
-      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-    </svg>
-    <span class="text-xs font-mono text-white opacity-70 uppercase tracking-widest">Base</span>
-  </div>
-  <p class="text-sm font-medium text-white flex items-center justify-between">
-    <span>Tokyo, Japan</span>
-    <span class="flex items-center gap-2">
-      <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-      <span class="text-xs text-[var(--color-text-secondary)] font-mono">Available</span>
-    </span>
-  </p>
+<CyberBentoCard glowColor="yellow" className="col-span-1 md:col-span-1 lg:col-span-2 row-span-2 flex flex-col justify-between p-6 md:p-8">
   
-  <div class="w-full h-px bg-[var(--color-border-default)] my-1"></div>
-  
-  <p class="text-xs text-[var(--color-text-secondary)] line-clamp-2 md:line-clamp-1">
-    {profile.bio}
-  </p>
-</CyberBentoCard>
-
-<!-- =======================
-  4. Social Link 1: GitHub (1x1)
-======================== -->
-<CyberBentoCard href={socialLinks[0]?.url || "#"} glowColor="cyan" className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 flex items-center justify-center group bg-gradient-to-br from-[var(--color-bg-card)] to-[var(--color-bg-elevated)] min-h-[140px]">
-  <div class="flex flex-col items-center gap-3">
-    <div class="w-12 h-12 rounded-full border border-[var(--color-border-default)] group-hover:border-[var(--color-neon-cyan)] flex items-center justify-center transition-colors bg-[var(--color-bg-base)]">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-primary)] group-hover:stroke-[var(--color-neon-cyan)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+  <div class="flex flex-col gap-4 h-full">
+    <div class="flex items-center gap-2 mb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-neon-yellow)]" stroke-width="2">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
       </svg>
+      <span class="text-xs font-mono text-white opacity-70 uppercase tracking-widest">Base Status</span>
     </div>
-    <span class="text-xs font-mono font-semibold text-[var(--color-text-secondary)] group-hover:text-white transition-colors">GitHub</span>
-  </div>
-</CyberBentoCard>
+    
+    <div class="flex flex-wrap items-center gap-3 text-sm font-medium text-white mb-2">
+      <div class="flex items-center gap-2 bg-[var(--color-bg-base)] px-3 py-1.5 rounded border border-[var(--color-border-default)] shadow-inner">
+        <span>Tokyo, Japan</span>
+      </div>
+      <div class="flex items-center gap-2 bg-[var(--color-bg-base)] px-3 py-1.5 rounded border border-[var(--color-border-default)] shadow-inner">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+        <span class="text-xs text-[var(--color-text-secondary)] font-mono">Available</span>
+      </div>
+    </div>
+    
+    <div class="w-full h-px bg-[var(--color-border-default)] my-2"></div>
+    
+    <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+      {profile.bio}
+    </p>
 
-<!-- =======================
-  5. Social Link 2: Zenn (1x1)
-======================== -->
-<CyberBentoCard href={socialLinks[1]?.url || "#"} glowColor="magenta" className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 flex items-center justify-center group bg-gradient-to-br from-[var(--color-bg-card)] to-[var(--color-bg-elevated)] min-h-[140px]">
-  <div class="flex flex-col items-center gap-3">
-    <div class="w-12 h-12 rounded-full border border-[var(--color-border-default)] group-hover:border-[var(--color-neon-magenta)] flex items-center justify-center transition-colors bg-[var(--color-bg-base)]">
-      <!-- Zennの簡単なアイコン代用（ペンみたいなマーク） -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-primary)] group-hover:stroke-[var(--color-neon-magenta)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-        <path d="M2 2l7.58 7.58"></path>
-        <circle cx="11" cy="11" r="2"></circle>
-      </svg>
+    <!-- タグ -->
+    <div class="mt-auto pt-4 flex flex-wrap gap-2 opacity-60">
+      <span class="font-mono text-[10px] text-[var(--color-text-muted)] border border-[var(--color-border-default)] px-2 py-1 rounded">CS Degree</span>
+      <span class="font-mono text-[10px] text-[var(--color-text-muted)] border border-[var(--color-border-default)] px-2 py-1 rounded">AI Apps</span>
+      <span class="font-mono text-[10px] text-[var(--color-text-muted)] border border-[var(--color-border-default)] px-2 py-1 rounded">Home Server</span>
     </div>
-    <span class="text-xs font-mono font-semibold text-[var(--color-text-secondary)] group-hover:text-white transition-colors">Zenn.dev</span>
   </div>
+
 </CyberBentoCard>
 
 <style>
