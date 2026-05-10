@@ -2,7 +2,7 @@
 title: "歌詞あてクイズ | 凋叶棕 ファンサイト"
 description: "凋叶棕の楽曲歌詞に登場する当て字・難読表現を4択で答えるReact製クイズサイト。アルバム単位で挑戦でき、正解時にルビや読みの背景も学べます。"
 tags: ["React", "Vite", "YAML", "Fan Site"]
-order: 5
+order: 4
 link: "https://song-quiz.luy869.net/"
 github: "https://github.com/luy869/song_quiz"
 featured: true
