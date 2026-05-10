@@ -2,7 +2,7 @@
 title: "大規模ローカルAIサーバー構築"
 description: "RTX 5080+3080のデュアルGPU環境でLLM・画像生成モデルをセルフホスト。Docker Composeによるマルチサービス管理とGPUリソース最適化。"
 tags: ["Docker", "Linux", "Ollama", "FLUX.1", "GPU"]
-order: 3
+order: 5
 featured: true
 ---
 
@@ -27,8 +27,13 @@ featured: true
 
 ## 実装・運用のポイント
 
-仮置き
+- Docker Composeで Ollama / ComfyUI / Discord Bot を独立コンテナとして管理し、サービス間を分離
+- WSL (Ubuntu) 上でDockerを動かしGPUパススルーを実現
+- Cloudflare Tunnelで外部公開しサーバーIPを一切露出させない構成
+- ジャンクPC（Core i7-3930K機 / 1,000円で購入・自力復旧）もマルチマシン運用に組み込み、旧メインPCはBot群の常時稼働用として稼働させている
 
 ## 今後の展望
 
-仮置き
+- 用途別の自動モデル切り替え（軽量モデルで意図を判定してからメインモデルにルーティング）
+- 監視・ログ収集の強化（Prometheus + Grafana等）
+- 量子化精度のさらなる調整と最新モデルへの追随
