@@ -2,7 +2,7 @@
 title: "自律型Discord Bot「Athena」"
 description: "ローカルLLMと画像生成AIを完全にローカル環境で動かすDiscord Bot。Flux.1 schnellによる画像生成とGemma 3によるチャット・翻訳機能を搭載。"
 tags: ["Python", "PyTorch", "Flux.1", "Ollama", "Docker", "Discord.js"]
-order: 1
+order: 3
 featured: true
 ---
 
