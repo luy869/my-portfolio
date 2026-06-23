@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Markdown from "markdown-to-jsx";
 
 const API_URL = "https://luy869.net/api/chat/";
 const COLLECTION_NAME = "default";
@@ -128,12 +129,30 @@ export default function ChatWidget() {
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] px-3 py-2 rounded-xl text-sm whitespace-pre-wrap leading-relaxed ${msg.role === "user"
-                      ? "bg-gray-900 text-white rounded-br-sm"
+                  className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed ${msg.role === "user"
+                      ? "bg-gray-900 text-white rounded-br-sm whitespace-pre-wrap"
                       : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm"
                     }`}
                 >
-                  {msg.content}
+                  {msg.role === "assistant" ? (
+                    <Markdown
+                      options={{
+                        overrides: {
+                          p: { props: { className: "mb-2 last:mb-0" } },
+                          ul: { props: { className: "list-disc pl-4 mb-2 space-y-0.5" } },
+                          ol: { props: { className: "list-decimal pl-4 mb-2 space-y-0.5" } },
+                          strong: { props: { className: "font-semibold" } },
+                          code: { props: { className: "bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" } },
+                          pre: { props: { className: "bg-gray-100 p-2 rounded text-xs font-mono overflow-x-auto mb-2 whitespace-pre-wrap" } },
+                          a: { props: { className: "underline", target: "_blank", rel: "noopener noreferrer" } },
+                        },
+                      }}
+                    >
+                      {msg.content}
+                    </Markdown>
+                  ) : (
+                    msg.content
+                  )}
                   {msg.role === "assistant" && loading && i === messages.length - 1 && msg.content === "" && (
                     <span className="inline-flex gap-1">
                       <span className="animate-bounce" style={{ animationDelay: "0ms" }}>·</span>
