@@ -103,36 +103,34 @@ export default function ChatWidget() {
     }
   }
 
+  const CYAN = "#00ffd5";
+  const DARK_HEADER = "#0f1422";
+  const BORDER_NEON = "rgba(0,255,213,0.35)";
+
   return (
     <div style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", zIndex: 9999, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.75rem" }}>
       {open && (
-        <div className="flex flex-col w-80 sm:w-96 h-[28rem] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-          {/* ヘッダー */}
-          <div className="flex items-center justify-between px-4 py-3 bg-gray-900 text-white">
+        <div style={{ border: `1px solid ${BORDER_NEON}`, boxShadow: `0 0 20px rgba(0,255,213,0.15), 0 8px 40px rgba(0,0,0,0.5)` }} className="flex flex-col w-80 sm:w-96 h-[28rem] rounded-2xl overflow-hidden">
+          {/* ヘッダー：ダーク＋シアン */}
+          <div style={{ background: DARK_HEADER, borderBottom: `1px solid ${BORDER_NEON}` }} className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-400" />
-              <span className="font-semibold text-sm">チャットボット</span>
+              <div style={{ background: CYAN, boxShadow: `0 0 6px ${CYAN}` }} className="w-2 h-2 rounded-full" />
+              <span className="font-semibold text-sm text-white">AIチャット</span>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="text-gray-400 hover:text-white transition-colors text-lg leading-none"
-            >
-              ×
-            </button>
+            <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-white transition-colors text-lg leading-none">×</button>
           </div>
 
-          {/* メッセージ一覧 */}
+          {/* メッセージ一覧：白背景で読みやすく */}
           <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50">
             {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
+              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed ${msg.role === "user"
-                      ? "bg-gray-900 text-white rounded-br-sm whitespace-pre-wrap"
+                  className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed ${
+                    msg.role === "user"
+                      ? "text-white rounded-br-sm whitespace-pre-wrap"
                       : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm"
-                    }`}
+                  }`}
+                  style={msg.role === "user" ? { background: "#0d7a6b" } : {}}
                 >
                   {msg.role === "assistant" ? (
                     <Markdown
@@ -144,7 +142,7 @@ export default function ChatWidget() {
                           strong: { props: { className: "font-semibold" } },
                           code: { props: { className: "bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" } },
                           pre: { props: { className: "bg-gray-100 p-2 rounded text-xs font-mono overflow-x-auto mb-2 whitespace-pre-wrap" } },
-                          a: { props: { className: "underline", target: "_blank", rel: "noopener noreferrer" } },
+                          a: { props: { className: "underline", style: { color: "#0d7a6b" }, target: "_blank", rel: "noopener noreferrer" } },
                         },
                       }}
                     >
@@ -154,7 +152,7 @@ export default function ChatWidget() {
                     msg.content
                   )}
                   {msg.role === "assistant" && loading && i === messages.length - 1 && msg.content === "" && (
-                    <span className="inline-flex gap-1">
+                    <span className="inline-flex gap-1 text-gray-400">
                       <span className="animate-bounce" style={{ animationDelay: "0ms" }}>·</span>
                       <span className="animate-bounce" style={{ animationDelay: "150ms" }}>·</span>
                       <span className="animate-bounce" style={{ animationDelay: "300ms" }}>·</span>
@@ -166,7 +164,7 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* 入力欄 */}
+          {/* 入力欄：白背景 */}
           <div className="flex items-end gap-2 px-3 py-3 border-t border-gray-200 bg-white">
             <textarea
               value={input}
@@ -175,12 +173,13 @@ export default function ChatWidget() {
               placeholder="質問を入力... / Ask anything..."
               rows={1}
               disabled={loading}
-              className="flex-1 resize-none border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-gray-500 disabled:opacity-50 max-h-24 overflow-y-auto"
+              className="flex-1 resize-none border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-gray-400 disabled:opacity-50 max-h-24 overflow-y-auto"
             />
             <button
               onClick={send}
               disabled={loading || !input.trim()}
-              className="flex-shrink-0 w-9 h-9 bg-gray-900 text-white rounded-xl flex items-center justify-center hover:bg-gray-700 disabled:opacity-40 transition-colors"
+              style={{ background: DARK_HEADER, borderColor: BORDER_NEON, color: CYAN }}
+              className="flex-shrink-0 w-9 h-9 border rounded-xl flex items-center justify-center disabled:opacity-40 transition-colors"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13" />
@@ -194,7 +193,8 @@ export default function ChatWidget() {
       {/* トグルボタン */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-14 h-14 bg-gray-900 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
+        style={{ background: DARK_HEADER, border: `1px solid ${BORDER_NEON}`, color: CYAN, boxShadow: `0 0 16px rgba(0,255,213,0.2)` }}
+        className="w-14 h-14 rounded-full flex items-center justify-center transition-colors"
         aria-label="チャットを開く"
       >
         {open ? (
