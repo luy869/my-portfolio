@@ -14,14 +14,22 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // 3秒後にヒントを表示、開いたら消す
   useEffect(() => {
+    const t = setTimeout(() => setShowHint(true), 3000);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (open) setShowHint(false);
     if (open && messages.length === 0) {
       setMessages([
         {
           role: "assistant",
-          content: "こんにちは！ゆうについて何でも聞いてください。\nHi! Feel free to ask me anything about Yu.",
+          content: "こんにちは！ゆうについて何でも聞いてください。\n\n> ⏱ 初回の応答は AIモデルの起動に **10秒ほど** かかることがあります。\n\nHi! Feel free to ask me anything about Yu.\n\n> ⏱ The first response may take **~10 seconds** while the AI model loads.",
         },
       ]);
     }
@@ -190,24 +198,40 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {/* トグルボタン */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        style={{ background: DARK_HEADER, border: `1px solid ${BORDER_NEON}`, color: CYAN, boxShadow: `0 0 16px rgba(0,255,213,0.2)` }}
-        className="w-14 h-14 rounded-full flex items-center justify-center transition-colors"
-        aria-label="チャットを開く"
-      >
-        {open ? (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        ) : (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
+      {/* ヒント吹き出し */}
+      {showHint && !open && (
+        <div style={{ background: DARK_HEADER, border: `1px solid ${BORDER_NEON}`, color: "#e8eaf2", boxShadow: `0 0 12px rgba(0,255,213,0.15)` }}
+          className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm whitespace-nowrap">
+          <span style={{ color: CYAN }}>💬</span>
+          <span>AIチャットボット、試してみてね！</span>
+          <button onClick={() => setShowHint(false)} style={{ color: "#5a6380" }} className="ml-1 leading-none hover:text-white transition-colors">×</button>
+        </div>
+      )}
+
+      {/* トグルボタン（パルスリング付き） */}
+      <div className="relative">
+        {!open && (
+          <span style={{ border: `2px solid ${CYAN}` }}
+            className="absolute inset-0 rounded-full animate-ping opacity-30 pointer-events-none" />
         )}
-      </button>
+        <button
+          onClick={() => setOpen((v) => !v)}
+          style={{ background: DARK_HEADER, border: `1px solid ${BORDER_NEON}`, color: CYAN, boxShadow: `0 0 20px rgba(0,255,213,0.3)` }}
+          className="w-14 h-14 rounded-full flex items-center justify-center transition-colors"
+          aria-label="チャットを開く"
+        >
+          {open ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          )}
+        </button>
+      </div>
     </div>
   );
 }
