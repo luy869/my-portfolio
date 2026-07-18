@@ -13,7 +13,7 @@ export const siteConfig = {
 export const profile = {
     name: "ゆう",
     handle: "luy869",
-    avatarUrl: "/avatar.png",
+    avatarUrl: "/avatar.webp",
     // ↓ トップに大きく表示される一言。技術的強みを端的に。
     catchphrase: "高度な技術を誰もが使いやすい形にするエンジニア",
     status: "東京工科大学 コンピュータサイエンス学部 コンピュータサイエンス学科 3年",
