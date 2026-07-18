@@ -30,3 +30,9 @@ widget/package-lock.json
 
 # worker cache and secrets
 worker/.wrangler/
+
+# ローカル作業ファイル（レビュー文書・スクリーンショット）
+/REVIEW_*.md
+/PROPOSAL_*.md
+/*.png
+/.playwright-mcp/

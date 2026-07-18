@@ -5,7 +5,7 @@ tags: ["Python", "FastAPI", "ChromaDB", "Ollama", "React", "TypeScript", "Cloudf
 order: 1
 featured: true
 link: "https://luy869.net"
-github: "https://github.com/luy869/rag-platform"
+github: "https://github.com/luy869/chat_bot"
 ---
 
 ## 概要

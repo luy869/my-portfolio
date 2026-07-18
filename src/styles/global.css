@@ -309,3 +309,26 @@
 .hexagon {
   clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
 }
+
+/* ============================================
+   アクセシビリティ
+   ============================================ */
+:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* スクロール連動フェードは即座に表示状態へ */
+  [data-fade] {
+    opacity: 1;
+  }
+}

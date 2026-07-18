@@ -26,7 +26,7 @@ pnpm preview    # ビルド結果をプレビュー
 
 **スタイリング**: Tailwind CSS v4 を PostCSS ではなく Vite プラグイン経由で使用。テーマカラーは `src/styles/global.css` で CSS カスタムプロパティとして定義（`text-primary`・`text-secondary`・`text-muted`・`accent`・`bg-card`・`bg-secondary`・`border-default`）。
 
-**React**: `@astrojs/react` はインストール済みだが、現在のコンポーネントはすべて `.astro` ファイルで React コンポーネントは未使用。
+**React**: 本体の `package.json` に React 依存はない。チャットウィジェットは `widget/` 配下の独立した Vite + React プロジェクトで、`cd widget && pnpm build` 後に生成される `dist/chat-widget.iife.js` と `dist/style.css` を `public/chat-widget.iife.js` / `public/chat-widget.css` に手動コピーして反映する。
 
 ## プロジェクトの追加方法
 

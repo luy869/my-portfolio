@@ -6,6 +6,7 @@ export interface Props {
   description?: string;
 }
 const { title, description = "ゆうのポートフォリオサイト。ローカルAI・インフラ構築・Web開発の個人プロジェクトと活動を紹介しています。" } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -20,7 +21,13 @@ const { title, description = "ゆうのポートフォリオサイト。ロー�
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://luy869.net" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content="https://luy869.net/avatar.webp" />
+    <meta property="og:site_name" content="luy869.net" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:image" content="https://luy869.net/avatar.webp" />
+
+    <link rel="canonical" href={canonicalUrl} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -42,7 +49,7 @@ const { title, description = "ゆうのポートフォリオサイト。ロー�
     <slot />
 
     <div id="chat-widget-root"></div>
-    <script src="/chat-widget.iife.js" is:inline></script>
+    <script src="/chat-widget.iife.js" is:inline defer></script>
 
     <script>
       // スクロール連動フェードアニメーション

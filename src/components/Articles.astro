@@ -12,10 +12,11 @@ interface ZennArticle {
 let articles: ZennArticle[] = [];
 try {
   const res = await fetch("https://zenn.dev/api/articles?username=luy849&order=latest");
+  if (!res.ok) throw new Error(`Zenn API returned ${res.status}`);
   const data = await res.json();
   articles = data.articles ?? [];
-} catch {
-  // フォーバック
+} catch (err) {
+  console.warn("Zenn記事の取得に失敗:", err);
 }
 
 function formatDate(dateStr: string) {
