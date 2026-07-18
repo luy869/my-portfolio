@@ -19,15 +19,24 @@ export default {
       return new Response("Forbidden", { status: 403 });
     }
 
-    // Origin チェック（ブラウザリクエスト）
-    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    // Origin チェック（未設定・許可外は 403。POSTには必ずOriginが付くため正規利用は壊れない）
+    if (!ALLOWED_ORIGINS.includes(origin)) {
       return new Response("Forbidden", { status: 403 });
     }
 
     // /api/* → nginx の /api/* ルートに転送（プレフィックスを保持）
     const backendUrl = env.BACKEND_URL + url.pathname + url.search;
 
-    const backendHeaders = new Headers(request.headers);
+    // 転送ヘッダーはホワイトリスト化し、必要なものだけコピーする
+    const backendHeaders = new Headers();
+    const contentType = request.headers.get("Content-Type");
+    if (contentType) {
+      backendHeaders.set("Content-Type", contentType);
+    }
+    const accept = request.headers.get("Accept");
+    if (accept) {
+      backendHeaders.set("Accept", accept);
+    }
     if (env.API_KEY) {
       backendHeaders.set("X-API-Key", env.API_KEY);
     }

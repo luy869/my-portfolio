@@ -1,6 +1,10 @@
 ---
 import CyberBentoCard from "./ui/CyberBentoCard.astro";
 import { profile, socialLinks } from "../data/site";
+
+const github = socialLinks.find((l) => l.label === "GitHub")?.url ?? "#";
+const zenn = socialLinks.find((l) => l.label === "Zenn")?.url ?? "#";
+const x = socialLinks.find((l) => l.label === "X (Twitter)")?.url ?? "#";
 ---
 
 <!-- =======================
@@ -43,14 +47,14 @@ import { profile, socialLinks } from "../data/site";
     <div class="w-16 sm:w-20 shrink-0 border-l border-[var(--color-border-default)] bg-[var(--color-bg-base)]/50 backdrop-blur-sm flex flex-col items-center justify-center gap-6 py-6 z-20">
       
       <!-- GitHub -->
-      <a href={socialLinks[0]?.url || "#"} title="GitHub" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-cyan)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(0,255,213,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
+      <a href={github} title="GitHub" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-cyan)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(0,255,213,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-secondary)] group-hover/btn:stroke-[var(--color-neon-cyan)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
         </svg>
       </a>
 
       <!-- Zenn -->
-      <a href={socialLinks[1]?.url || "#"} title="Zenn" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-magenta)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(255,0,170,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
+      <a href={zenn} title="Zenn" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-magenta)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(255,0,170,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" class="stroke-[var(--color-text-secondary)] group-hover/btn:stroke-[var(--color-neon-magenta)] transition-colors" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
           <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
@@ -60,7 +64,7 @@ import { profile, socialLinks } from "../data/site";
       </a>
 
       <!-- X (Twitter) -->
-      <a href={socialLinks[2]?.url || "#"} title="X (Twitter)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-yellow)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(245,255,80,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
+      <a href={x} title="X (Twitter)" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-[var(--color-border-default)] hover:border-[var(--color-neon-yellow)] flex items-center justify-center transition-all bg-[var(--color-bg-card)] group/btn hover:shadow-[0_0_15px_rgba(245,255,80,0.3)] hover:-translate-y-1 sm:hover:-translate-x-1 sm:hover:translate-y-0">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--color-text-secondary)] group-hover/btn:text-[var(--color-neon-yellow)] transition-colors">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.005 4.15H5.059z"/>
         </svg>
