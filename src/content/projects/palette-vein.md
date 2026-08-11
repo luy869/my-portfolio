@@ -2,7 +2,7 @@
 title: "PaletteVein — 好みを学習する壁紙発掘サービス"
 description: "CLIPのセマンティック埋め込みと時間減衰アルゴリズムで好みを学習し、推薦理由を可視化しながら壁紙イラストを発掘するWebサービス。Go + React + pgvector をフルスタックで個人開発。"
 tags: ["Go", "React", "TypeScript", "Python", "PostgreSQL", "pgvector", "CLIP", "gRPC", "Docker"]
-order: 7
+order: 8
 featured: true
 github: "https://github.com/luy869/palette-vein"
 ---

@@ -2,7 +2,7 @@
 title: "学バスNavi — TUT スクールバス時刻表PWA"
 description: "東京工科大学のスクールバス時刻表を快適に確認できるPWA。LinuxClubのメンバーと共同開発。Next.js + Go + TypeSpec 構成で、現在時刻から次のバスを一覧表示する。"
 tags: ["TypeScript", "Next.js", "Go", "TypeSpec", "Tailwind CSS", "Gemini API", "PWA"]
-order: 8
+order: 9
 featured: false
 ---
 
