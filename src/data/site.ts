@@ -15,11 +15,12 @@ export const profile = {
     handle: "luy869",
     avatarUrl: "/avatar.webp",
     // ↓ トップに大きく表示される一言。技術的強みを端的に。
-    catchphrase: "AIと技術で課題を解決するエンジニア",
-    status: "東京工科大学 コンピュータサイエンス学部 コンピュータサイエンス学科 3年",
+    catchphrase: "ローカルLLMを自宅GPUで回し、AIプロダクトを一人で公開まで持っていく",
+    // ↓ キャッチコピーの下に表示される所属・研究テーマ。
+    status: "東京工科大学 CS学部 3年｜研究テーマは XAI × LLM",
     // ↓ キャッチコピーの下に表示される自己PR。2〜3文で。
     //   「なぜその技術を使うのか」「どんなエンジニアを目指しているのか」を具体的に。
-    bio: "ローカルLLMや画像生成AIを自前環境で動かすのが最近の趣味です。またAIを組み込んだアプリ開発なども行っています。",
+    bio: "RAG基盤を3日で自作し、このサイトで実運用中。面接音声の分析ツールは2週間で公開しました。",
 } as const;
 
 export interface SkillCategory {
@@ -60,18 +61,20 @@ export interface ExperienceItem {
 }
 
 export const experience: ExperienceItem[] = [
-    {
-        title: "株式会社Sansan",
-        role: "サマーインターンシップ",
-        period: "2026年8月",
-        description: "",
-    },
-    {
-        title: "DMM Sprint 2026 Go",
-        role: "サマーインターン",
-        period: "2026年8月",
-        description: "",
-    },
+    // 参加後に description を書いてからコメントを外す（空欄のままだとカードが空表示になるため）
+    // {
+    //     title: "株式会社Sansan",
+    //     role: "サマーインターンシップ",
+    //     period: "2026年8月",
+    //     description: "",
+    // },
+    // 参加後に description を書いてからコメントを外す（空欄のままだとカードが空表示になるため）
+    // {
+    //     title: "DMM Sprint 2026 Go",
+    //     role: "サマーインターン",
+    //     period: "2026年8月",
+    //     description: "",
+    // },
     {
         title: "東京工科大学 研究室配属",
         role: "XAI（説明可能AI）× LLM",
