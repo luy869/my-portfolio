@@ -2,7 +2,7 @@
 title: "PDF → AI処理システム"
 description: "Gemini APIを使ったPDF解析・データ抽出パイプライン。大量ドキュメントからの構造化データ自動生成を目的に開発。"
 tags: ["Go", "Gemini API", "PDF Processing", "CLI"]
-order: 7
+order: 9
 featured: true
 ---
 

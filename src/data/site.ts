@@ -5,7 +5,7 @@
 // ========================================
 
 export const siteConfig = {
-    title: "rui | luy869.net",
+    title: "ゆう（luy869） | ポートフォリオ",
     description: "ゆうのポートフォリオサイト。ローカルAI・インフラ構築・Web開発の個人プロジェクトと活動を紹介しています。",
     url: "https://luy869.net",
 } as const;
@@ -61,16 +61,28 @@ export interface ExperienceItem {
 
 export const experience: ExperienceItem[] = [
     {
-        title: "HRクラウド株式会社",
-        role: "長期インターン バックエンドエンジニア",
-        period: "2025年9月～2026年7月",
-        description: "自社プロダクト「採用一括かんりくん」の開発に携わり、採用評価AIツール周りの改修を中心に担当。PHP（FuelPHP）やReact・TypeScriptを用いた機能実装・改修、既存機能のパフォーマンス改善を行っています。実際の顧客に影響するコードを書く責任感と、大規模コードベースを読み解きながら開発する手法を学んでいます。",
+        title: "株式会社Sansan",
+        role: "サマーインターンシップ",
+        period: "2026年8月",
+        description: "",
+    },
+    {
+        title: "DMM Sprint 2026 Go",
+        role: "サマーインターン",
+        period: "2026年8月",
+        description: "",
     },
     {
         title: "東京工科大学 研究室配属",
         role: "XAI（説明可能AI）× LLM",
         period: "2026年7月～現在",
         description: "説明可能AI（XAI）とLLMを研究テーマとして取り組んでいます。個人開発で推薦サービスの「なぜこの結果になったのか」を可視化しようとした経験が出発点になっています。AIを実際の価値に変えるには出力の精度だけでなく理由を説明できることが必要だと考え、研究として掘り下げています。",
+    },
+    {
+        title: "HRクラウド株式会社",
+        role: "長期インターン バックエンドエンジニア",
+        period: "2025年9月～2026年7月",
+        description: "自社プロダクト「採用一括かんりくん」の開発に携わり、採用評価AIツール周りの改修を中心に担当。PHP（FuelPHP）やReact・TypeScriptを用いた機能実装・改修、既存機能のパフォーマンス改善を行いました。実際の顧客に影響するコードを書く責任感と、大規模コードベースを読み解きながら開発する手法を学びました。",
     },
     {
         title: "少年ジャンプハッカソン",
@@ -88,18 +100,6 @@ export const experience: ExperienceItem[] = [
         role: "会場誘導スタッフ",
         period: "計5回参加",
         description: "数十万人規模が来場するコミックマーケット・博麗神社例大祭等のイベントで会場誘導を担当。事前集会で当年の動線・前回の反省点を組織全体で共有し、本番では担当外のトラブル情報も積極的にインプットして自分の持ち場への波及を予測しながら動いた。愛着のある界隈に運営側として恩返ししたいという思いから継続している。",
-    },
-    {
-        title: "DMM Sprint 2026 Go",
-        role: "サマーインターン",
-        period: "2026年8月",
-        description: "",
-    },
-    {
-        title: "株式会社Sansan",
-        role: "サマーインターンシップ",
-        period: "2026年8月",
-        description: "",
     },
 ];
 

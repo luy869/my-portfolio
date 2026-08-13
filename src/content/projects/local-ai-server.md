@@ -2,7 +2,7 @@
 title: "大規模ローカルAIサーバー構築"
 description: "RTX 5080+3080のデュアルGPU環境でLLM・画像生成モデルをセルフホスト。Docker Composeによるマルチサービス管理とGPUリソース最適化。"
 tags: ["Docker", "Linux", "Ollama", "FLUX.1", "GPU"]
-order: 6
+order: 5
 featured: true
 ---
 
